@@ -1,0 +1,1 @@
+export type AdminPage = "products" | "orders" | "create" | "recyclebin";
