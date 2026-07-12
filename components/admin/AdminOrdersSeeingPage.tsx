@@ -87,92 +87,91 @@ export default function AdminOrdersSeeingPage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center py-20">
-        Loading Orders...
-      </div>
-    );
+    return <div className="flex justify-center py-20">Loading Orders...</div>;
   }
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">
-          Orders
-        </h1>
+      {/* Header */}
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Orders
+          </h1>
 
-        <span className="rounded-lg bg-orange-100 px-4 py-2 font-semibold text-orange-700">
-          Total Orders : {orders.length}
-        </span>
+          <p className="mt-1 text-sm text-gray-500">
+            Manage customer orders and update delivery status.
+          </p>
+        </div>
+
+        <div className="rounded-full border border-gray-200 bg-gray-50 px-5 py-2 text-sm font-semibold text-gray-700">
+          Total Orders: <span className="text-black">{orders.length}</span>
+        </div>
       </div>
 
+      {/* Error */}
       {message && (
-        <div className="mb-5 rounded-lg bg-red-100 p-4 text-red-600">
+        <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-medium text-red-600">
           {message}
         </div>
       )}
 
+      {/* Orders */}
       <div className="space-y-6">
         {orders.map((order) => (
           <div
             key={order.id}
-            className="rounded-xl border bg-white shadow-sm"
+            className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md"
           >
             {/* Header */}
-            <div className="flex flex-wrap items-center justify-between border-b p-5">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 bg-gray-50 px-6 py-5">
               <div>
-                <h2 className="text-xl font-bold">
+                <h2 className="text-xl font-bold text-gray-900">
                   Order #{order.id}
                 </h2>
 
-                <p className="text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500">
                   {new Date(order.createdAt).toLocaleString()}
                 </p>
               </div>
 
               <span
                 className={`rounded-full px-4 py-2 text-sm font-semibold ${statusColor(
-                  order.status
+                  order.status,
                 )}`}
               >
                 {order.status}
               </span>
             </div>
 
-            {/* Customer */}
-            <div className="grid gap-4 border-b p-5 md:grid-cols-2">
-              <div>
-                <p className="text-sm text-gray-500">
+            {/* Customer Info */}
+            <div className="grid gap-6 border-b border-gray-100 p-6 md:grid-cols-2">
+              <div className="rounded-2xl bg-gray-50 p-5">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
                   Customer
                 </p>
 
-                <p className="font-semibold">
+                <p className="font-semibold text-gray-900">
                   {order.user.name ?? "Unknown"}
                 </p>
 
-                <p className="text-gray-500">
-                  {order.user.email}
-                </p>
+                <p className="mt-1 text-sm text-gray-500">{order.user.email}</p>
               </div>
 
-              <div>
-                <p className="text-sm text-gray-500">
-                  Phone
+              <div className="rounded-2xl bg-gray-50 p-5">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                  Delivery Information
                 </p>
 
-                <p>{order.phone}</p>
+                <p className="font-medium text-gray-900">{order.phone}</p>
 
-                <p className="mt-2 text-sm text-gray-500">
-                  Address
-                </p>
-
-                <p>{order.address}</p>
+                <p className="mt-2 text-sm text-gray-600">{order.address}</p>
               </div>
             </div>
 
             {/* Products */}
-            <div className="border-b p-5">
-              <h3 className="mb-4 font-semibold">
+            <div className="border-b border-gray-100 p-6">
+              <h3 className="mb-5 text-lg font-semibold text-gray-900">
                 Ordered Products
               </h3>
 
@@ -180,20 +179,20 @@ export default function AdminOrdersSeeingPage() {
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between rounded-lg bg-gray-50 p-3"
+                    className="flex items-center justify-between rounded-2xl border border-gray-100 bg-gray-50 px-5 py-4"
                   >
                     <div>
-                      <p className="font-medium">
+                      <p className="font-semibold text-gray-900">
                         {item.product.name}
                       </p>
 
-                      <p className="text-sm text-gray-500">
-                        Qty : {item.quantity}
+                      <p className="mt-1 text-sm text-gray-500">
+                        Quantity: {item.quantity}
                       </p>
                     </div>
 
-                    <p className="font-semibold">
-                      ${(item.price * item.quantity).toFixed(2)}
+                    <p className="font-bold text-gray-900">
+                      {(item.price * item.quantity).toLocaleString()} MMK
                     </p>
                   </div>
                 ))}
@@ -201,12 +200,29 @@ export default function AdminOrdersSeeingPage() {
             </div>
 
             {/* Footer */}
-            <div className="flex flex-wrap items-center justify-between p-5">
-              <h2 className="text-xl font-bold text-green-600">
-                Total : ${order.total.toFixed(2)}
-              </h2>
+            <div className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm text-gray-500">Order Total</p>
 
-              <button className="rounded-lg bg-blue-600 px-5 py-2 font-medium text-white transition hover:bg-blue-700">
+                <p className="text-2xl font-bold text-gray-900">
+                  {order.total.toLocaleString()} MMK
+                </p>
+              </div>
+
+              <button
+                className="
+                rounded-xl
+                bg-black
+                px-6
+                py-3
+                text-sm
+                font-semibold
+                text-white
+                transition
+                hover:bg-gray-800
+                active:scale-95
+              "
+              >
                 Update Status
               </button>
             </div>
@@ -214,8 +230,16 @@ export default function AdminOrdersSeeingPage() {
         ))}
 
         {!orders.length && (
-          <div className="rounded-xl border bg-white py-20 text-center text-gray-500">
-            No Orders Found
+          <div className="rounded-3xl border border-dashed border-gray-300 bg-gray-50 py-24 text-center">
+            <div className="mb-4 text-5xl">📦</div>
+
+            <h2 className="text-xl font-semibold text-gray-900">
+              No Orders Found
+            </h2>
+
+            <p className="mt-2 text-gray-500">
+              Customer orders will appear here.
+            </p>
           </div>
         )}
       </div>

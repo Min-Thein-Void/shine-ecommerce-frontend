@@ -48,202 +48,209 @@ function RecycleBin() {
   };
 
   return (
-    <div className="min-h-full bg-slate-50">
+    <div>
       {/* Header */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-slate-800">Recycle Bin</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Recycle Bin
+          </h1>
 
-          <p className="mt-1 text-sm text-slate-500">
-            Restore deleted products or permanently remove them
+          <p className="mt-2 text-sm text-gray-500">
+            Restore deleted products or permanently remove them.
           </p>
         </div>
 
-        <span
+        <div
           className="
-          rounded-full 
-          border 
-          border-rose-200 
-          bg-rose-50 
-          px-5 
-          py-2 
-          text-sm 
-          font-medium 
-          text-rose-600
+          rounded-full
+          border
+          border-red-200
+          bg-red-50
+          px-5
+          py-2
+          text-sm
+          font-semibold
+          text-red-600
         "
         >
-          Deleted: {products.length}
-        </span>
+          Deleted Products: {products.length}
+        </div>
       </div>
 
-      {/* Table Card */}
+      {/* Table */}
       <div
         className="
-        overflow-hidden 
-        rounded-2xl 
-        border 
-        border-slate-200 
-        bg-white 
+        overflow-hidden
+        rounded-3xl
+        border
+        border-gray-200
+        bg-white
         shadow-sm
       "
       >
-        <table className="w-full">
-          <thead className="bg-slate-50 border-b">
-            <tr>
-              <th className="px-6 py-4 text-left text-sm font-semibold text-slate-600">
-                Image
-              </th>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-100 bg-gray-50">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Image
+                </th>
 
-              <th className="px-6 py-4 text-left text-sm font-semibold text-slate-600">
-                Product
-              </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Product
+                </th>
 
-              <th className="px-6 py-4 text-left text-sm font-semibold text-slate-600">
-                Price
-              </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Price
+                </th>
 
-              <th className="px-6 py-4 text-center text-sm font-semibold text-slate-600">
-                Actions
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {products.map((product) => (
-              <tr
-                key={product.id}
-                className="
-                border-b
-                last:border-none
-                transition
-                hover:bg-slate-50
-              "
-              >
-                {/* Image */}
-                <td className="px-6 py-5">
-                  {product.image ? (
-                    <img
-                      src={`http://localhost:3100/uploads/${product.image}`}
-                      alt={product.name}
-                      className="
-                      h-16
-                      w-16
-                      rounded-xl
-                      border
-                      border-slate-200
-                      object-cover
-                    "
-                    />
-                  ) : (
-                    <div
-                      className="
-                      flex
-                      h-16
-                      w-16
-                      items-center
-                      justify-center
-                      rounded-xl
-                      bg-slate-100
-                      text-xs
-                      text-slate-400
-                    "
-                    >
-                      No image
-                    </div>
-                  )}
-                </td>
-
-                {/* Product */}
-                <td className="px-6 py-5">
-                  <p className="font-semibold text-slate-800">{product.name}</p>
-
-                  <p
-                    className="
-                  mt-1
-                  max-w-md
-                  truncate
-                  text-sm
-                  text-slate-500
-                "
-                  >
-                    {product.description}
-                  </p>
-                </td>
-
-                {/* Price */}
-                <td className="px-6 py-5">
-                  <span
-                    className="
-                    rounded-lg
-                    bg-slate-100
-                    px-3
-                    py-1
-                    text-sm
-                    font-medium
-                    text-slate-700
-                  "
-                  >
-                    ${product.price}
-                  </span>
-                </td>
-
-                {/* Actions */}
-                <td className="px-6 py-5">
-                  <div className="flex justify-center gap-3">
-                    <button
-                      onClick={() => restoreProductHandler(product.id)}
-                      className="
-                      rounded-xl
-                      border
-                      border-emerald-200
-                      bg-emerald-50
-                      p-2.5
-                      text-emerald-600
-                      transition
-                      hover:bg-emerald-100
-                    "
-                      title="Restore product"
-                    >
-                      <RotateCcw size={18} />
-                    </button>
-
-                    <button
-                      className="
-                      rounded-xl
-                      border
-                      border-rose-200
-                      bg-rose-50
-                      p-2.5
-                      text-rose-500
-                      transition
-                      hover:bg-rose-100
-                    "
-                      title="Delete permanently"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </td>
+                <th className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wide text-gray-500">
+                  Actions
+                </th>
               </tr>
-            ))}
+            </thead>
 
-            {products.length === 0 && (
-              <tr>
-                <td
-                  colSpan={4}
+            <tbody className="divide-y divide-gray-100">
+              {products.map((product) => (
+                <tr
+                  key={product.id}
                   className="
-                  py-16
-                  text-center
-                  text-slate-400
+                  transition
+                  hover:bg-gray-50
                 "
                 >
-                  <div className="text-4xl mb-3">🗑️</div>
-                  Recycle bin is empty
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                  {/* Image */}
+                  <td className="px-6 py-5">
+                    {product.image ? (
+                      <img
+                        src={`http://localhost:3100/uploads/${product.image}`}
+                        alt={product.name}
+                        className="
+                        h-16
+                        w-16
+                        rounded-2xl
+                        object-cover
+                      "
+                      />
+                    ) : (
+                      <div
+                        className="
+                        flex
+                        h-16
+                        w-16
+                        items-center
+                        justify-center
+                        rounded-2xl
+                        bg-gray-100
+                        text-xs
+                        text-gray-400
+                      "
+                      >
+                        No Image
+                      </div>
+                    )}
+                  </td>
+
+                  {/* Product */}
+                  <td className="px-6 py-5">
+                    <p className="font-semibold text-gray-900">
+                      {product.name}
+                    </p>
+
+                    <p
+                      className="
+                      mt-1
+                      max-w-md
+                      truncate
+                      text-sm
+                      text-gray-500
+                    "
+                    >
+                      {product.description || "No description"}
+                    </p>
+                  </td>
+
+                  {/* Price */}
+                  <td className="px-6 py-5">
+                    <span
+                      className="
+                      rounded-full
+                      bg-gray-100
+                      px-4
+                      py-1.5
+                      text-sm
+                      font-semibold
+                      text-gray-700
+                    "
+                    >
+                      {product.price.toLocaleString()} MMK
+                    </span>
+                  </td>
+
+                  {/* Actions */}
+                  <td className="px-6 py-5">
+                    <div className="flex justify-center gap-3">
+                      {/* Restore */}
+                      <button
+                        onClick={() => restoreProductHandler(product.id)}
+                        title="Restore product"
+                        className="
+                        rounded-xl
+                        border
+                        border-green-200
+                        bg-green-50
+                        p-2.5
+                        text-green-600
+                        transition
+                        hover:bg-green-100
+                        active:scale-95
+                      "
+                      >
+                        <RotateCcw size={18} />
+                      </button>
+
+                      {/* Permanent Delete */}
+                      <button
+                        title="Delete permanently"
+                        className="
+                        rounded-xl
+                        border
+                        border-red-200
+                        bg-red-50
+                        p-2.5
+                        text-red-600
+                        transition
+                        hover:bg-red-100
+                        active:scale-95
+                      "
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+
+              {/* Empty */}
+              {products.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="py-20 text-center">
+                    <div className="text-5xl">🗑️</div>
+
+                    <h3 className="mt-4 font-semibold text-gray-900">
+                      Recycle Bin is Empty
+                    </h3>
+
+                    <p className="mt-1 text-sm text-gray-500">
+                      Deleted products will appear here.
+                    </p>
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

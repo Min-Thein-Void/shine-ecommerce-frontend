@@ -79,152 +79,192 @@ const ProductDetailClient = ({ product }: any) => {
   }, [product.id]);
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <div className="grid md:grid-cols-2 gap-12">
-        {/* 🖼️ Image */}
-        <div className="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition">
+    <div className="mx-auto max-w-7xl px-6 py-10">
+      {/* Product Detail */}
+      <div className="grid gap-10 lg:grid-cols-2">
+        {/* Image */}
+        <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
           {product.image ? (
             <img
               src={`http://localhost:3100/uploads/${product.image}`}
               alt={product.name}
-              className="w-full h-[420px] object-cover rounded-xl"
+              className="h-[520px] w-full rounded-2xl object-cover"
             />
           ) : (
-            <div className="w-full h-[420px] bg-gray-200 flex items-center justify-center rounded-xl">
+            <div className="flex h-[520px] items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
               No Image
             </div>
           )}
         </div>
 
-        {/* 📦 Info */}
+        {/* Information */}
         <div className="flex flex-col justify-between">
           <div>
             {/* Category */}
-            <span className="text-xs bg-purple-100 text-purple-600 px-3 py-1 rounded-full">
+            <span className="inline-flex rounded-full bg-gray-100 px-4 py-1.5 text-xs font-semibold text-gray-700">
               {product.category?.name || "Uncategorized"}
             </span>
 
             {/* Name */}
-            <h1 className="text-3xl font-bold mt-3">{product.name}</h1>
+            <h1 className="mt-5 text-4xl font-bold tracking-tight text-gray-900">
+              {product.name}
+            </h1>
 
             {/* Rating */}
             {avgRating && (
-              <div className="flex items-center gap-2 mt-2">
-                <span className="text-yellow-500">⭐ {avgRating}</span>
-                <span className="text-sm text-gray-400">
-                  ({product.reviews.length} reviews)
+              <div className="mt-4 flex items-center gap-3">
+                <span className="rounded-full bg-yellow-50 px-3 py-1 text-sm font-semibold text-yellow-600">
+                  ⭐ {avgRating}
+                </span>
+
+                <span className="text-sm text-gray-500">
+                  {product.reviews.length} reviews
                 </span>
               </div>
             )}
 
             {/* Price */}
-            <p className="text-3xl text-blue-600 font-bold mt-4">
-              ${product.price}
+            <p className="mt-8 text-4xl font-bold text-gray-900">
+              {product.price.toLocaleString()} MMK
             </p>
 
-            {/* Stock Badge */}
+            {/* Stock */}
             <span
-              className={`inline-block mt-2 px-3 py-1 text-xs rounded-full ${
+              className={`mt-4 inline-flex rounded-full px-4 py-2 text-sm font-semibold ${
                 product.stock > 0
-                  ? "bg-green-100 text-green-600"
-                  : "bg-red-100 text-red-600"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-red-100 text-red-700"
               }`}
             >
               {product.stock > 0
-                ? `In Stock (${product.stock})`
-                : "Out of Stock"}
+                ? `${product.stock} available`
+                : "Out of stock"}
             </span>
 
             {/* Description */}
-            <p className="text-gray-600 mt-5 leading-relaxed">
+            <p className="mt-8 leading-7 text-gray-600">
               {product.description || "No description available."}
             </p>
           </div>
 
-          {/* 🛒 Actions */}
-          <div className="mt-8 space-y-4">
-            {/* Buttons */}
-            <div className="flex gap-4">
-              <button
-                disabled={product.stock === 0}
-                onClick={() => {
-                  addToCart({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.image,
-                    quantity: 1,
-                  });
-                  router.push("/cart");
-                }}
-                className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-xl font-semibold transition disabled:opacity-50"
-              >
-                Add to Cart
-              </button>
-            </div>
+          {/* Action */}
+          <div className="mt-10">
+            <button
+              disabled={product.stock === 0}
+              onClick={() => {
+                addToCart({
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  image: product.image,
+                  quantity: 1,
+                });
+
+                router.push("/cart");
+              }}
+              className="
+              w-full
+              rounded-2xl
+              bg-black
+              py-4
+              text-sm
+              font-semibold
+              text-white
+              transition
+              hover:bg-gray-800
+              active:scale-[0.98]
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            "
+            >
+              Add To Cart
+            </button>
           </div>
         </div>
       </div>
 
-      {/* ⭐ Reviews */}
-      <div className="mt-14">
-        <h2 className="text-xl font-bold mb-6">Customer Reviews</h2>
+      {/* Reviews */}
+      <section className="mt-16">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
+
+          <p className="mt-1 text-sm text-gray-500">
+            See what customers think about this product.
+          </p>
+        </div>
 
         {reviews?.length > 0 ? (
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid gap-5 md:grid-cols-2">
             {reviews.map((review: any) => (
               <div
                 key={review.id}
-                className="bg-white border rounded-xl p-4 shadow-sm hover:shadow transition"
+                className="
+                rounded-2xl
+                border
+                border-gray-200
+                bg-white
+                p-5
+                shadow-sm
+                transition
+                hover:shadow-md
+              "
               >
-                <div className="flex space-x-1 items-center">
-                  <p className="text-xl text-blue-500">{review.user?.name}</p>
-                  <div className="opacity-55">
-                    {review.rating === 1 && (
-                      <p className="text-yellow-500 font-medium">⭐</p>
-                    )}
-                    {review.rating === 2 && (
-                      <p className="text-yellow-500 font-medium">⭐⭐</p>
-                    )}
-                    {review.rating === 3 && (
-                      <p className="text-yellow-500 font-medium">⭐⭐⭐</p>
-                    )}
-                    {review.rating === 4 && (
-                      <p className="text-yellow-500 font-medium">⭐⭐⭐⭐</p>
-                    )}
-                    {review.rating === 5 && (
-                      <p className="text-yellow-500 font-medium">⭐⭐⭐⭐⭐</p>
-                    )}
-                  </div>
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-gray-900">
+                    {review.user?.name}
+                  </h3>
+
+                  <span className="text-yellow-500">
+                    {"⭐".repeat(review.rating)}
+                  </span>
                 </div>
-                <p className="text-gray-600 mt-2 capitalize">{review.comment}</p>
+
+                <p className="mt-3 text-gray-600">{review.comment}</p>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-gray-400">No reviews yet.</p>
+          <div className="rounded-2xl border border-dashed border-gray-300 py-12 text-center text-gray-400">
+            No reviews yet.
+          </div>
         )}
-      </div>
-      {/* ✍️ Write Review */}
-      <div className="mt-10 bg-white border rounded-2xl p-5 shadow-sm">
-        <h3 className="font-semibold text-lg mb-3">Write a Review</h3>
+      </section>
 
-        {/* ⭐ Rating Select */}
+      {/* Write Review */}
+      <section className="mt-12 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h3 className="text-xl font-bold text-gray-900">Write a Review</h3>
+
         <form
+          className="mt-6 space-y-5"
           onSubmit={(e) => {
             e.preventDefault();
             createReview(Number(product.id));
           }}
         >
-          {/* ⭐ Rating */}
-          <div className="mb-3">
-            <label className="block text-sm mb-1">Rating</label>
+          {/* Rating */}
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-gray-700">
+              Rating
+            </label>
+
             <select
               onChange={(e) => {
                 const value = e.target.value;
                 setRating(value ? Number(value) : null);
               }}
-              className="w-full border rounded-lg px-3 py-2"
+              className="
+              h-12
+              w-full
+              rounded-xl
+              border
+              border-gray-200
+              px-4
+              text-sm
+              focus:border-black
+              focus:outline-none
+              focus:ring-4
+              focus:ring-gray-100
+            "
             >
               <option value="">Select rating</option>
               <option value="5">⭐⭐⭐⭐⭐ (5)</option>
@@ -235,27 +275,56 @@ const ProductDetailClient = ({ product }: any) => {
             </select>
           </div>
 
-          {/* 💬 Comment */}
-          <div className="mb-4">
-            <label className="block text-sm mb-1">Comment</label>
+          {/* Comment */}
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-gray-700">
+              Comment
+            </label>
+
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 h-24"
+              placeholder="Share your experience..."
+              className="
+              h-32
+              w-full
+              resize-none
+              rounded-xl
+              border
+              border-gray-200
+              px-4
+              py-3
+              text-sm
+              focus:border-black
+              focus:outline-none
+              focus:ring-4
+              focus:ring-gray-100
+            "
             />
           </div>
 
-          {/* 🚀 Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-500 text-white py-2 rounded-lg"
+            className="
+            w-full
+            rounded-xl
+            bg-black
+            py-3.5
+            text-sm
+            font-semibold
+            text-white
+            transition
+            hover:bg-gray-800
+            disabled:opacity-50
+          "
           >
             {loading ? "Posting..." : "Post Review"}
           </button>
-          <p className="text-amber-700">{message}</p>
+
+          {message && <p className="text-sm text-red-500">{message}</p>}
         </form>
-      </div>
+      </section>
     </div>
   );
 };

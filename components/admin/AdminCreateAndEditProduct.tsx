@@ -10,11 +10,24 @@ function AdminCreateAndEditProduct({
   editingProduct,
 }: AdminCreateAndEditProductProps) {
   return (
-    <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-md">
-      <h1 className="text-3xl font-bold mb-6">
-        {editingProduct ? "Edit Product Form" : "Create Product Form"}
-      </h1>
-      <AdminProductForm editingProduct={editingProduct} />
+    <div className="mx-auto max-w-3xl">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+          {editingProduct ? "Edit Product" : "Create Product"}
+        </h1>
+
+        <p className="mt-2 text-sm text-gray-500">
+          {editingProduct
+            ? "Update product information and inventory details."
+            : "Add a new product to your store catalog."}
+        </p>
+      </div>
+
+      {/* Form Card */}
+      <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm lg:p-8">
+        <AdminProductForm editingProduct={editingProduct} />
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface Product {
@@ -95,40 +96,68 @@ export default function MyOrdersHistory() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-5 py-10">
-      <h1 className="text-3xl font-bold mb-8">My Orders</h1>
+    <div className="mx-auto max-w-6xl px-6 py-10">
+      {/* Header */}
+      <div className="mb-10">
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+          My Orders
+        </h1>
 
+        <p className="mt-2 text-sm text-gray-500">
+          View your purchase history and order status.
+        </p>
+      </div>
+
+      {/* Error */}
       {message && (
-        <div className="mb-6 rounded-lg bg-red-100 p-4 text-red-600">
+        <div className="mb-8 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-medium text-red-600">
           {message}
         </div>
       )}
 
+      {/* Empty */}
       {!message && myOrders.length === 0 && (
-        <div className="rounded-xl border p-10 text-center">
-          <h2 className="text-xl font-semibold">No Orders Yet</h2>
+        <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-gray-300 bg-gray-50 py-24">
+          <div className="mb-5 text-6xl">📦</div>
 
-          <p className="text-gray-500 mt-2">You haven't placed any orders.</p>
+          <h2 className="text-2xl font-semibold text-gray-900">
+            No Orders Yet
+          </h2>
+
+          <p className="mt-2 text-gray-500">
+            Start shopping and your orders will appear here.
+          </p>
+
+          <Link
+            href="/products"
+            className="mt-8 rounded-xl bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-800"
+          >
+            Browse Products
+          </Link>
         </div>
       )}
 
-      <div className="space-y-5">
+      {/* Orders */}
+      <div className="space-y-8">
         {myOrders.map((order) => (
           <div
             key={order.id}
-            className="rounded-xl border bg-white p-6 shadow-sm hover:shadow-md transition"
+            className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg"
           >
-            <div className="flex justify-between items-start flex-wrap gap-4">
+            {/* Header */}
+            <div className="flex flex-col gap-4 border-b border-gray-100 bg-gray-50 px-7 py-6 md:flex-row md:items-center md:justify-between">
               <div>
-                <h2 className="font-semibold text-lg">Order #{order.id}</h2>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Order #{order.id}
+                </h2>
 
-                <p className="text-gray-500 text-sm">
+                <p className="mt-1 text-sm text-gray-500">
                   {new Date(order.createdAt).toLocaleDateString()}
                 </p>
               </div>
 
               <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                className={`rounded-full px-4 py-2 text-sm font-semibold ${getStatusColor(
                   order.status,
                 )}`}
               >
@@ -136,46 +165,54 @@ export default function MyOrdersHistory() {
               </span>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4 mt-6">
+            {/* Body */}
+            <div className="grid gap-6 p-7 md:grid-cols-3">
               <div>
-                <p className="text-gray-500 text-sm">Phone</p>
-
-                <p className="font-medium">{order.phone}</p>
-              </div>
-
-              <div>
-                <p className="text-gray-500 text-sm">Total</p>
-
-                <p className="font-semibold text-green-600">
-                  ${order.total.toFixed(2)}
+                <p className="text-sm text-gray-500">Phone</p>
+                <p className="mt-1 font-semibold text-gray-900">
+                  {order.phone}
                 </p>
               </div>
 
-              <div className="md:col-span-2">
-                <p className="text-gray-500 text-sm">Delivery Address</p>
+              <div>
+                <p className="text-sm text-gray-500">Delivery Address</p>
+                <p className="mt-1 font-medium text-gray-900">
+                  {order.address}
+                </p>
+              </div>
 
-                <p>{order.address}</p>
+              <div className="md:text-right">
+                <p className="text-sm text-gray-500">Order Total</p>
+                <p className="mt-1 text-2xl font-bold text-gray-900">
+                  {order.total.toLocaleString()} MMK
+                </p>
               </div>
             </div>
-            <div className="mt-6 border-t pt-5">
-              <h3 className="font-semibold mb-3">Ordered Products</h3>
 
-              <div className="space-y-3">
+            {/* Products */}
+            <div className="border-t border-gray-100 px-7 py-6">
+              <h3 className="mb-5 text-lg font-semibold text-gray-900">
+                Ordered Items
+              </h3>
+
+              <div className="space-y-4">
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex justify-between items-center rounded-lg bg-gray-50 p-3"
+                    className="flex items-center justify-between rounded-2xl border border-gray-100 bg-gray-50 px-5 py-4 transition hover:bg-white"
                   >
                     <div>
-                      <p className="font-medium">{item.product.name}</p>
+                      <h4 className="font-semibold text-gray-900">
+                        {item.product.name}
+                      </h4>
 
-                      <p className="text-sm text-gray-500">
-                        Qty: {item.quantity}
+                      <p className="mt-1 text-sm text-gray-500">
+                        Quantity: {item.quantity}
                       </p>
                     </div>
 
-                    <p className="font-semibold text-green-600">
-                      ${(item.price * item.quantity).toFixed(2)}
+                    <p className="text-lg font-bold text-gray-900">
+                      {(item.price * item.quantity).toLocaleString()} MMK
                     </p>
                   </div>
                 ))}

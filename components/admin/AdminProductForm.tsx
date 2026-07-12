@@ -15,50 +15,116 @@ function AdminProductForm({ editingProduct }: AdminProductFormProps) {
   } = useProduct(editingProduct);
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Product Name */}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Product Name */}
+      <div>
+        <label className="mb-2 block text-sm font-semibold text-gray-700">
+          Product Name
+        </label>
+
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="Enter product name"
+          className="
+          h-12
+          w-full
+          rounded-xl
+          border
+          border-gray-200
+          bg-white
+          px-4
+          text-sm
+          text-gray-900
+          placeholder:text-gray-400
+          transition
+          focus:border-black
+          focus:outline-none
+          focus:ring-4
+          focus:ring-gray-100
+        "
+        />
+      </div>
+
+      {/* Description */}
+      <div>
+        <label className="mb-2 block text-sm font-semibold text-gray-700">
+          Description
+        </label>
+
+        <textarea
+          rows={5}
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Describe your product..."
+          className="
+          w-full
+          resize-none
+          rounded-xl
+          border
+          border-gray-200
+          bg-white
+          px-4
+          py-3
+          text-sm
+          text-gray-900
+          placeholder:text-gray-400
+          transition
+          focus:border-black
+          focus:outline-none
+          focus:ring-4
+          focus:ring-gray-100
+        "
+        />
+      </div>
+
+      {/* Image Upload */}
+      <div>
+        <label className="mb-2 block text-sm font-semibold text-gray-700">
+          Product Image
+        </label>
+
+        <label
+          className="
+          flex
+          cursor-pointer
+          items-center
+          justify-center
+          rounded-xl
+          border-2
+          border-dashed
+          border-gray-300
+          bg-gray-50
+          px-5
+          py-8
+          text-sm
+          text-gray-500
+          transition
+          hover:border-gray-400
+          hover:bg-gray-100
+        "
+        >
+          <div className="text-center">
+            <p className="font-medium text-gray-700">Upload Product Image</p>
+
+            <p className="mt-1 text-xs text-gray-400">
+              PNG, JPG up to your allowed size
+            </p>
+          </div>
+
+          <input type="file" onChange={handleImageChange} className="hidden" />
+        </label>
+      </div>
+
+      {/* Price + Stock */}
+      <div className="grid gap-6 md:grid-cols-2">
         <div>
-          <label className="block mb-2 font-medium">Product Name</label>
-
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter product name"
-            className="w-full border rounded-lg px-4 py-2"
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <label className="block mb-2 font-medium">Description</label>
-
-          <textarea
-            rows={5}
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Enter product description"
-            className="w-full border rounded-lg px-4 py-2 resize-none"
-          />
-        </div>
-
-        {/* Image */}
-        <div>
-          <label className="block mb-2 font-medium">Product Image</label>
-
-          <input
-            type="file"
-            onChange={handleImageChange}
-            className="w-full border rounded-lg px-4 py-2"
-          />
-        </div>
-
-        {/* Price */}
-        <div>
-          <label className="block mb-2 font-medium">Price</label>
+          <label className="mb-2 block text-sm font-semibold text-gray-700">
+            Price (MMK)
+          </label>
 
           <input
             type="number"
@@ -66,33 +132,27 @@ function AdminProductForm({ editingProduct }: AdminProductFormProps) {
             value={formData.price}
             onChange={handleChange}
             placeholder="0"
-            className="w-full border rounded-lg px-4 py-2"
+            className="
+            h-12
+            w-full
+            rounded-xl
+            border
+            border-gray-200
+            px-4
+            text-sm
+            transition
+            focus:border-black
+            focus:outline-none
+            focus:ring-4
+            focus:ring-gray-100
+          "
           />
         </div>
 
-        {/* Category */}
         <div>
-          <label className="block mb-2 font-medium">Category</label>
-
-          <select
-            name="categoryId"
-            value={formData.categoryId}
-            onChange={handleChange}
-            className="w-full border rounded-lg px-4 py-2"
-          >
-            <option value="">Select Category</option>
-
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Stock */}
-        <div>
-          <label className="block mb-2 font-medium">Stock</label>
+          <label className="mb-2 block text-sm font-semibold text-gray-700">
+            Stock
+          </label>
 
           <input
             type="number"
@@ -100,21 +160,80 @@ function AdminProductForm({ editingProduct }: AdminProductFormProps) {
             value={formData.stock}
             onChange={handleChange}
             placeholder="0"
-            className="w-full border rounded-lg px-4 py-2"
+            className="
+            h-12
+            w-full
+            rounded-xl
+            border
+            border-gray-200
+            px-4
+            text-sm
+            transition
+            focus:border-black
+            focus:outline-none
+            focus:ring-4
+            focus:ring-gray-100
+          "
           />
         </div>
+      </div>
 
-        <button
-          type="submit"
-          className={`rounded-lg px-6 py-3 font-semibold text-white transition duration-200 ${editingProduct
-              ? "bg-blue-600 hover:bg-blue-700"
-              : "bg-green-600 hover:bg-green-700"
-            }`}
+      {/* Category */}
+      <div>
+        <label className="mb-2 block text-sm font-semibold text-gray-700">
+          Category
+        </label>
+
+        <select
+          name="categoryId"
+          value={formData.categoryId}
+          onChange={handleChange}
+          className="
+          h-12
+          w-full
+          rounded-xl
+          border
+          border-gray-200
+          bg-white
+          px-4
+          text-sm
+          text-gray-700
+          transition
+          focus:border-black
+          focus:outline-none
+          focus:ring-4
+          focus:ring-gray-100
+        "
         >
-          {editingProduct ? "Update Product" : "Create Product"}
-        </button>
-      </form>
-    </>
+          <option value="">Select Category</option>
+
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Submit */}
+      <button
+        type="submit"
+        className="
+        w-full
+        rounded-xl
+        bg-black
+        py-3.5
+        text-sm
+        font-semibold
+        text-white
+        transition
+        hover:bg-gray-800
+        active:scale-[0.98]
+      "
+      >
+        {editingProduct ? "Update Product" : "Create Product"}
+      </button>
+    </form>
   );
 }
 

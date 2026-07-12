@@ -70,79 +70,127 @@ function CartPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold mb-8">🛒 Your Cart</h1>
+    <div className="mx-auto max-w-6xl px-6 py-10">
+      {/* Header */}
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+            Shopping Cart
+          </h1>
+          <p className="mt-2 text-sm text-gray-500">
+            Review your items before checkout.
+          </p>
+        </div>
+
         {cart.length > 0 && (
           <button
             onClick={() => clearCart()}
-            className="-mt-5 text-red-500 border-2 px-1 py-0.5 rounded-2xl font-semibold active:scale-95"
+            className="rounded-xl border border-red-200 px-5 py-2 text-sm font-medium text-red-600 transition-all duration-200 hover:bg-red-50 active:scale-95"
           >
-            Clear 🛒
+            Clear Cart
           </button>
         )}
       </div>
 
       {cart.length === 0 ? (
-        <p className="text-gray-500 text-center mt-10">Your cart is empty</p>
+        <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-gray-300 bg-gray-50 py-24">
+          <div className="mb-5 text-6xl">🛒</div>
+
+          <h2 className="text-2xl font-semibold text-gray-900">
+            Your cart is empty
+          </h2>
+
+          <p className="mt-2 text-gray-500">
+            Looks like you haven't added anything yet.
+          </p>
+
+          <Link
+            href="/products"
+            className="mt-8 rounded-xl bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-800"
+          >
+            Continue Shopping
+          </Link>
+        </div>
       ) : (
-        <>
-          <div className="space-y-4">
+        <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
+          {/* Cart Items */}
+          <div className="space-y-5">
             {cart.map((item) => (
               <Link
-                href={`/product/${item.product.id}`}
                 key={item.id}
-                className="flex items-center justify-between bg-white shadow-sm border rounded-xl p-4"
+                href={`/product/${item.product.id}`}
+                className="group flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:border-gray-300 hover:shadow-lg"
               >
                 {/* Left */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-5">
                   {item.product.image ? (
                     <img
                       src={`http://localhost:3100/uploads/${item.product.image}`}
-                      className="w-16 h-16 object-cover rounded-lg"
                       alt={item.product.name}
+                      className="h-24 w-24 rounded-xl object-cover transition duration-300 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="w-16 h-16 bg-gray-200 flex items-center justify-center rounded-lg text-xs text-gray-500">
+                    <div className="flex h-24 w-24 items-center justify-center rounded-xl bg-gray-100 text-sm text-gray-400">
                       No Image
                     </div>
                   )}
 
                   <div>
-                    <p className="font-semibold">{item.product.name}</p>
-                    <p className="text-sm text-gray-500">
-                      ${item.product.price}
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      {item.product.name}
+                    </h2>
+
+                    <p className="mt-2 text-sm text-gray-500">
+                      {item.product.price.toLocaleString()} MMK
                     </p>
                   </div>
                 </div>
 
-                {/* Middle */}
-                <div className="flex items-center gap-1">
-                  <span className="text-sm text-gray-500 ml-2">Qty:</span>
-                  <span className="font-semibold mr-2">{item.quantity}</span>
-                </div>
-
                 {/* Right */}
                 <div className="text-right">
-                  <p className="font-bold text-blue-600">
-                    ${item.product.price * item.quantity}
+                  <div className="mb-4 inline-flex rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700">
+                    Qty {item.quantity}
+                  </div>
+
+                  <p className="text-xl font-bold text-gray-900">
+                    {(item.product.price * item.quantity).toLocaleString()} MMK
                   </p>
                 </div>
               </Link>
             ))}
           </div>
 
-          {/* Total Section */}
-          <div className="mt-8 border-t pt-6 flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Total</h2>
-            <p className="text-2xl font-bold text-blue-600">${total}</p>
-          </div>
+          {/* Summary */}
+          <div className="h-fit rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-bold text-gray-900">Order Summary</h2>
 
-          {/* Checkout Button */}
-          <button className="w-full mt-6 bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-semibold transition">
-            <Link href="/checkout">Checkout</Link>
-          </button>
-        </>
+            <div className="my-6 space-y-4 border-y border-gray-100 py-6">
+              <div className="flex items-center justify-between text-gray-600">
+                <span>Items</span>
+                <span>{cart.length}</span>
+              </div>
+
+              <div className="flex items-center justify-between text-lg font-semibold text-gray-900">
+                <span>Total</span>
+                <span>{total.toLocaleString()} MMK</span>
+              </div>
+            </div>
+
+            <Link
+              href="/checkout"
+              className="flex w-full items-center justify-center rounded-xl bg-black py-3 text-sm font-semibold text-white transition hover:bg-gray-800"
+            >
+              Proceed to Checkout
+            </Link>
+
+            <Link
+              href="/products"
+              className="mt-3 flex w-full items-center justify-center rounded-xl border border-gray-200 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+            >
+              Continue Shopping
+            </Link>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -81,115 +81,158 @@ export default function AdminProductsSeeingPage({
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Products</h1>
+      {/* Header */}
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+            Products
+          </h1>
 
-        <span className="rounded-lg bg-orange-100 px-4 py-2 font-medium text-orange-700">
-          Total : {products.length}
-        </span>
+          <p className="mt-1 text-sm text-gray-500">
+            Manage your store inventory and product information.
+          </p>
+        </div>
+
+        <div className="rounded-full border border-gray-200 bg-gray-50 px-5 py-2 text-sm font-semibold text-gray-700">
+          Total Products: <span className="text-black">{products.length}</span>
+        </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border bg-white shadow">
-        <table className="w-full">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-5 py-4 text-left">Image</th>
-              <th className="px-5 py-4 text-left">Name</th>
-              <th className="px-5 py-4 text-left">Category</th>
-              <th className="px-5 py-4 text-left">Price</th>
-              <th className="px-5 py-4 text-left">Stock</th>
-              <th className="px-5 py-4 text-center">Actions</th>
-            </tr>
-          </thead>
+      {/* Table */}
+      <div className="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-gray-100 bg-gray-50">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Image
+                </th>
 
-          <tbody>
-            {products.map((product) => (
-              <tr key={product.id} className="border-t hover:bg-gray-50">
-                <td className="px-5 py-4">
-                  {product.image ? (
-                    <img
-                      src={`http://localhost:3100/uploads/${product.image}`}
-                      alt={product.name}
-                      className="h-16 w-16 rounded-lg object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-16 w-16 items-center justify-center rounded-lg bg-gray-200 text-sm text-gray-500">
-                      No Image
-                    </div>
-                  )}
-                </td>
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Product
+                </th>
 
-                <td className="px-5 py-4">
-                  <div>
-                    <p className="font-semibold">{product.name}</p>
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Category
+                </th>
+
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Price
+                </th>
+
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Stock
+                </th>
+
+                <th className="px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider text-gray-500">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+
+            <tbody className="divide-y divide-gray-100">
+              {products.map((product) => (
+                <tr key={product.id} className="transition hover:bg-gray-50">
+                  {/* Image */}
+                  <td className="px-6 py-5">
+                    {product.image ? (
+                      <img
+                        src={`http://localhost:3100/uploads/${product.image}`}
+                        alt={product.name}
+                        className="h-16 w-16 rounded-2xl object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-xs text-gray-400">
+                        No Image
+                      </div>
+                    )}
+                  </td>
+
+                  {/* Product */}
+                  <td className="max-w-xs px-6 py-5">
+                    <p className="font-semibold text-gray-900">
+                      {product.name}
+                    </p>
 
                     <p className="mt-1 line-clamp-2 text-sm text-gray-500">
-                      {product.description}
+                      {product.description || "No description"}
                     </p>
-                  </div>
-                </td>
+                  </td>
 
-                <td className="px-5 py-4">{product?.category?.name ?? "-"}</td>
-
-                <td className="px-5 py-4 font-semibold">${product.price}</td>
-
-                <td className="px-5 py-4">
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => decreaseStockHandler(product.id)}
-                      className="rounded-md bg-gray-200 p-2 transition hover:bg-gray-300"
-                    >
-                      <Minus size={16} />
-                    </button>
-
-                    <span
-                      className={`min-w-12.5 rounded-full px-3 py-1 text-center text-sm font-medium ${
-                        product.stock <= 5
-                          ? "bg-red-100 text-red-600"
-                          : "bg-green-100 text-green-700"
-                      }`}
-                    >
-                      {product.stock}
+                  {/* Category */}
+                  <td className="px-6 py-5">
+                    <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                      {product?.category?.name ?? "Unknown"}
                     </span>
+                  </td>
 
-                    <button
-                      onClick={() => increaseStockHandler(product.id)}
-                      className="rounded-md bg-blue-500 p-2 text-white transition hover:bg-blue-600"
-                    >
-                      <Plus size={16} />
-                    </button>
-                  </div>
-                </td>
+                  {/* Price */}
+                  <td className="px-6 py-5">
+                    <span className="font-bold text-gray-900">
+                      {product.price.toLocaleString()} MMK
+                    </span>
+                  </td>
 
-                <td className="px-5 py-4">
-                  <div className="flex justify-center gap-3">
-                    <button
-                      onClick={() => editProductHandler(product)}
-                      className="rounded-lg bg-blue-500 p-2 text-white transition hover:bg-blue-600"
-                    >
-                      <Pencil size={18} />
-                    </button>
+                  {/* Stock */}
+                  <td className="px-6 py-5">
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => decreaseStockHandler(product.id)}
+                        className="rounded-lg border border-gray-200 p-2 text-gray-600 transition hover:bg-gray-100 active:scale-95"
+                      >
+                        <Minus size={16} />
+                      </button>
 
-                    <button
-                      onClick={() => deleteProductHandler(product.id)}
-                      className="rounded-lg bg-red-500 p-2 text-white transition hover:bg-red-600"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      <span
+                        className={`min-w-12 rounded-full px-3 py-1 text-center text-sm font-semibold ${
+                          product.stock <= 5
+                            ? "bg-red-100 text-red-600"
+                            : "bg-green-100 text-green-700"
+                        }`}
+                      >
+                        {product.stock}
+                      </span>
 
-            {!products.length && (
-              <tr>
-                <td colSpan={6} className="py-10 text-center text-gray-500">
-                  No Products Found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                      <button
+                        onClick={() => increaseStockHandler(product.id)}
+                        className="rounded-lg bg-black p-2 text-white transition hover:bg-gray-800 active:scale-95"
+                      >
+                        <Plus size={16} />
+                      </button>
+                    </div>
+                  </td>
+
+                  {/* Actions */}
+                  <td className="px-6 py-5">
+                    <div className="flex justify-center gap-2">
+                      <button
+                        onClick={() => editProductHandler(product)}
+                        className="rounded-xl border border-gray-200 p-2.5 text-gray-700 transition hover:bg-gray-100 active:scale-95"
+                      >
+                        <Pencil size={17} />
+                      </button>
+
+                      <button
+                        onClick={() => deleteProductHandler(product.id)}
+                        className="rounded-xl border border-red-200 p-2.5 text-red-600 transition hover:bg-red-50 active:scale-95"
+                      >
+                        <Trash2 size={17} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+
+              {!products.length && (
+                <tr>
+                  <td colSpan={6} className="py-16 text-center text-gray-400">
+                    No products found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
