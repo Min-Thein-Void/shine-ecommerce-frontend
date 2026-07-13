@@ -1,19 +1,33 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import { useEffect, useState } from "react";
 
 function SearchByPriceInput() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const params = new URLSearchParams(searchParams);
+  const [keyword, setKeyword] = useState(searchParams.get("price") ?? "");
 
-    params.set("price", e.target.value);
+  useEffect(() => {
+    setKeyword(searchParams.get("price") ?? "");
+  }, [searchParams]);
 
-    router.push(`?${params.toString()}`);
-  };
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const params = new URLSearchParams(searchParams);
+
+      if (keyword.trim()) {
+        params.set("price", keyword);
+      } else {
+        params.delete("price");
+      }
+
+      router.replace(`?${params.toString()}`);
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [keyword]);
 
   return (
     <div className="relative w-full sm:w-80 lg:w-72">
@@ -34,8 +48,8 @@ function SearchByPriceInput() {
 
       <input
         type="number"
-        defaultValue={searchParams.get("price") ?? ""}
-        onChange={handleChange}
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
         placeholder="Maximum price..."
         className="
         h-11
