@@ -1,0 +1,696 @@
+/*
+=====================================================
+                PAGINATION SYSTEM FLOW
+          CLIENT PRODUCTS + ADMIN PRODUCTS
+=====================================================
+
+
+========================
+1. USER ACTION
+========================
+
+User opens products page
+
+        |
+        |
+        v
+
+Frontend requests default page
+
+
+URL:
+
+/products
+
+
+No page query found
+
+
+        |
+        |
+        v
+
+
+Backend receives:
+
+page = 1        (default)
+limit = 8       (default)
+
+
+
+=====================================================
+                BACKEND PAGINATION LOGIC
+=====================================================
+
+
+Controller
+
+@Get()
+searchProducts(
+    @Query() query: FilterProductsDto
+)
+
+
+        |
+        |
+        v
+
+
+ProductService
+
+
+async searchProducts(query)
+
+
+        |
+        |
+        v
+
+
+Get pagination values
+
+
+page = query.page || 1
+
+limit = query.limit || 8
+
+
+
+        |
+        |
+        v
+
+
+Calculate skip
+
+
+skip = (page - 1) * limit
+
+
+
+Example:
+
+page = 1
+limit = 8
+
+
+skip = (1 - 1) * 8
+
+skip = 0
+
+
+
+page = 2
+limit = 8
+
+
+skip = (2 - 1) * 8
+
+skip = 8
+
+
+
+page = 3
+limit = 8
+
+
+skip = (3 - 1) * 8
+
+skip = 16
+
+
+
+        |
+        |
+        v
+
+
+
+Prisma Query
+
+
+
+findMany({
+
+    where,
+
+    skip,
+
+    take: limit,
+
+    include,
+
+    orderBy
+
+})
+
+
+
+Example page 2:
+
+
+
+skip = 8
+
+take = 8
+
+
+
+Database:
+
+
+Product 1
+Product 2
+Product 3
+Product 4
+Product 5
+Product 6
+Product 7
+Product 8
+-----------------
+(skip these)
+
+Product 9   <----
+Product 10
+Product 11
+Product 12
+Product 13
+Product 14
+Product 15
+Product 16
+
+
+
+        |
+        |
+        v
+
+
+
+Get total product count
+
+
+
+product.count({
+
+    where
+
+})
+
+
+
+Example:
+
+total = 80 products
+
+
+
+Calculate pages:
+
+
+
+totalPages = Math.ceil(total / limit)
+
+
+
+80 / 8 = 10 pages
+
+
+
+        |
+        |
+        v
+
+
+
+Backend response:
+
+
+
+{
+    data:[
+        products
+    ],
+
+    meta:{
+        page:2,
+        limit:8,
+        total:80,
+        totalPages:10
+    }
+}
+
+
+
+
+=====================================================
+              CLIENT PRODUCTS PAGE FLOW
+=====================================================
+
+
+app/products/page.tsx
+
+
+(Server Component)
+
+
+
+Receive URL:
+
+
+/products?page=2
+
+
+
+        |
+        |
+        v
+
+
+
+searchParams
+
+
+{
+
+ page:"2"
+
+}
+
+
+
+        |
+        |
+        v
+
+
+
+Call API
+
+
+getProducts({
+
+ page
+
+})
+
+
+
+        |
+        |
+        v
+
+
+
+Backend returns:
+
+
+
+data + meta
+
+
+
+        |
+        |
+        v
+
+
+
+Render Products
+
+
+
+        |
+        |
+        v
+
+
+
+Render Pagination Component
+
+
+
+ProductsPaginationWrapper
+
+
+
+(Client Component)
+
+
+
+        |
+        |
+        v
+
+
+
+User clicks:
+
+
+Page 3 button
+
+
+
+        |
+        |
+        v
+
+
+
+handlePageChange(3)
+
+
+
+        |
+        |
+        v
+
+
+
+router.push(
+
+"?page=3"
+
+)
+
+
+
+        |
+        |
+        v
+
+
+
+Next.js reload server component
+
+
+
+        |
+        |
+        v
+
+
+
+page.tsx receives:
+
+
+
+page = 3
+
+
+
+        |
+        |
+        v
+
+
+
+Fetch products page 3
+
+
+
+        |
+        |
+        v
+
+
+
+Display new products
+
+
+
+
+=====================================================
+              ADMIN PRODUCTS PAGE FLOW
+=====================================================
+
+
+
+AdminProductsSeeingPage.tsx
+
+
+(Client Component)
+
+
+
+        |
+        |
+        v
+
+
+
+Component mounted
+
+
+
+useEffect(()=>{
+
+    getProducts()
+
+})
+
+
+
+        |
+        |
+        v
+
+
+
+API Request:
+
+
+GET
+
+/product?page=1
+
+
+
+        |
+        |
+        v
+
+
+
+NestJS Backend
+
+
+
+        |
+        |
+        v
+
+
+
+Prisma pagination
+
+
+
+skip = 0
+
+take = 8
+
+
+
+        |
+        |
+        v
+
+
+
+Return:
+
+
+
+{
+ data:[products],
+
+ meta:{
+    page:1,
+    totalPages:10
+ }
+
+}
+
+
+
+        |
+        |
+        v
+
+
+
+React State:
+
+
+
+const [products,setProducts]
+
+
+const [meta,setMeta]
+
+
+
+        |
+        |
+        v
+
+
+
+Render table
+
+
+
+        |
+        |
+        v
+
+
+
+Render:
+
+
+
+ProductsPagePagination
+
+
+
+        |
+        |
+        v
+
+
+
+User clicks page 2
+
+
+
+        |
+        |
+        v
+
+
+
+handlePageChange(2)
+
+
+
+        |
+        |
+        v
+
+
+
+Fetch again:
+
+
+getProducts({
+
+ page:2
+
+})
+
+
+
+        |
+        |
+        v
+
+
+
+Update state:
+
+
+
+setProducts(newProducts)
+
+setMeta(newMeta)
+
+
+
+        |
+        |
+        v
+
+
+
+Table shows page 2 products
+
+
+
+
+=====================================================
+              IMPORTANT DIFFERENCE
+=====================================================
+
+
+CLIENT PRODUCTS PAGE
+
+
+Server Component
+        |
+        |
+        v
+URL controls state
+
+?page=2
+
+
+Good for:
+
+- SEO
+- Public pages
+- Shareable URL
+
+
+
+
+ADMIN PRODUCTS PAGE
+
+
+Client Component
+        |
+        |
+        v
+React state controls UI
+
+
+Good for:
+
+- Dashboard
+- CRUD
+- Real-time actions
+
+
+
+
+=====================================================
+              COMMON DATABASE FORMULA
+=====================================================
+
+
+page 1:
+
+skip = 0
+
+
+page 2:
+
+skip = limit
+
+
+page 3:
+
+skip = limit * 2
+
+
+
+General:
+
+
+skip = (page - 1) * limit
+
+
+
+=====================================================
+*/

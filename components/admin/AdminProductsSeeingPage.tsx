@@ -10,10 +10,18 @@ import {
 } from "@/services/product.service";
 import { Product } from "@/types/product";
 import { AdminPage } from "@/types/admin";
+import ProductsPagePagination from "../ProductsPagePagination";
 
 interface AdminProductsSeeingPageProps {
   setEditingProduct: Dispatch<SetStateAction<Product | null>>;
   setActivePage: Dispatch<SetStateAction<AdminPage>>;
+}
+
+interface Meta {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
 }
 
 export default function AdminProductsSeeingPage({
@@ -22,15 +30,22 @@ export default function AdminProductsSeeingPage({
 }: AdminProductsSeeingPageProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [meta, setMeta] = useState<Meta | null>(null);
 
-  const getProductsHandler = async () => {
+  const getProductsHandler = async (page: number = 1) => {
     setLoading(true);
-    const data = await getProducts();
-    if (!data) {
+    const response = await getProducts(page);
+    const productsData: Product[] = response.data;
+    if (!productsData) {
       setLoading(false);
     }
-    setProducts(data);
+    setMeta(response.meta);
+    setProducts(productsData);
     setLoading(false);
+  };
+
+  const handlePageChange = async (page: number) => {
+    await getProductsHandler(page);
   };
 
   useEffect(() => {
@@ -232,6 +247,13 @@ export default function AdminProductsSeeingPage({
               )}
             </tbody>
           </table>
+          {meta && (
+            <ProductsPagePagination
+              currentPage={meta.page}
+              totalPages={meta.totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
       </div>
     </div>

@@ -1,8 +1,8 @@
 import { ProductFormData } from "@/types/productFormData";
 
-export async function getProducts() {
+export async function getProducts(page : number = 1) {
   try {
-    const res = await fetch("http://localhost:3100/product");
+    const res = await fetch( `http://localhost:3100/product?page=${page}`);
 
     const data = await res.json();
 

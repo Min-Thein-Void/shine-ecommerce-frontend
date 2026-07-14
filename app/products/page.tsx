@@ -1,4 +1,5 @@
 import CategoriesList from "@/components/CategoriesList";
+import ProductsPaginationWrapper from "@/components/ProductsPaginationWrapper";
 import SearchByPriceInput from "@/components/SearchByPriceInput";
 import SearchInput from "@/components/SearchInput";
 import Link from "next/link";
@@ -8,6 +9,8 @@ type Props = {
     search?: string;
     categoryId?: string;
     price?: string;
+    page?: string;
+    limit?: string;
   }>;
 };
 
@@ -29,12 +32,24 @@ type Product = {
   }[];
 };
 
+type ProductResponse = {
+  data: Product[];
+
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+};
+
 //backend ko req data poz tae function
 async function getProducts(filters: {
   search?: string;
   categoryId?: string;
   price?: string;
-}): Promise<Product[]> {
+  page?: string;
+}): Promise<ProductResponse> {
   const url = new URL("http://localhost:3100/product");
 
   if (filters.search) {
@@ -46,6 +61,9 @@ async function getProducts(filters: {
   if (filters.price) {
     url.searchParams.set("price", filters.price);
   }
+  if (filters.page) {
+    url.searchParams.set("page", filters.page);
+  }
 
   const res = await fetch(url, {
     cache: "no-store",
@@ -55,9 +73,16 @@ async function getProducts(filters: {
 }
 
 const Page = async ({ searchParams }: Props) => {
-  const { search, categoryId, price } = await searchParams;
+  const { search, categoryId, price, page } = await searchParams;
 
-  const products: Product[] = await getProducts({ search, categoryId, price });
+  const response = await getProducts({
+    search,
+    categoryId,
+    price,
+    page,
+  });
+
+  const products = response.data;
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
@@ -179,6 +204,10 @@ const Page = async ({ searchParams }: Props) => {
           );
         })}
       </div>
+      <ProductsPaginationWrapper
+        currentPage={response.meta.page}
+        totalPages={response.meta.totalPages}
+      />
     </div>
   );
 };
