@@ -32,19 +32,37 @@ export default function AdminProductsSeeingPage({
   const [loading, setLoading] = useState(true);
   const [meta, setMeta] = useState<Meta | null>(null);
 
+  // Product list ကို Backend ကနေယူတဲ့ function
+  // page မပို့ရင် default အနေနဲ့ Page 1 ကိုယူမယ်
   const getProductsHandler = async (page: number = 1) => {
+    // Loading စတင်မယ်
     setLoading(true);
+
+    // Backend ကို Page Number ပို့ပြီး Product Data ယူမယ်
     const response = await getProducts(page);
+
+    // Response ထဲက Product List ကို ခွဲထုတ်မယ်
     const productsData: Product[] = response.data;
+
+    // Product Data မရှိရင် Loading ပိတ်မယ်
     if (!productsData) {
       setLoading(false);
     }
+
+    // Pagination Information (page, totalPages...) ကို State ထဲသိမ်းမယ်
     setMeta(response.meta);
+
+    // Product List ကို State ထဲသိမ်းမယ်
+    // UI က ဒီ State ကိုကြည့်ပြီး Product Table ကို Render လုပ်မယ်
     setProducts(productsData);
+
+    // Data ရပြီးလို့ Loading ပိတ်မယ်
     setLoading(false);
   };
 
+  // Pagination Component က Page Number အသစ်ပို့လာတဲ့အချိန် Run မယ့် Function
   const handlePageChange = async (page: number) => {
+    // User ရွေးတဲ့ Page Number နဲ့ Product အသစ်တွေ Backend ကနေပြန်ယူမယ်
     await getProductsHandler(page);
   };
 
