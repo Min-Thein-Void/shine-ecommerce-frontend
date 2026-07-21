@@ -1,5 +1,17 @@
 "use client";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
+import { toast } from "sonner";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Minus, Pencil, Plus, Trash2 } from "lucide-react";
 import {
@@ -97,18 +109,30 @@ export default function AdminProductsSeeingPage({
     setActivePage("create");
   };
 
-  const deleteProductHandler = async (id: number) => {
-    const isConfirmed = confirm(
-      "Are you sure you want to delete this product?",
-    );
+  // const deleteProductHandler = async (id: number) => {
+  //   const isConfirmed = confirm(
+  //     "Are you sure you want to delete this product?",
+  //   );
 
-    if (!isConfirmed) {
-      return;
-    }
+  //   if (!isConfirmed) {
+  //     return;
+  //   }
+  //   const res = await destroyProduct(id);
+  //   if (res?.status === 200) {
+  //     alert("Product Delete Successful...");
+  //     setProducts((prev) => prev.filter((product) => product.id !== id));
+  //   }
+  // };
+
+  const deleteProductHandler = async (id: number) => {
     const res = await destroyProduct(id);
+
     if (res?.status === 200) {
-      alert("Product Delete Successful...");
       setProducts((prev) => prev.filter((product) => product.id !== id));
+
+      toast.success("Product deleted successfully");
+    } else {
+      toast.error("Delete failed");
     }
   };
 
@@ -245,12 +269,47 @@ export default function AdminProductsSeeingPage({
                         <Pencil size={17} />
                       </button>
 
-                      <button
-                        onClick={() => deleteProductHandler(product.id)}
-                        className="rounded-xl border border-red-200 p-2.5 text-red-600 transition hover:bg-red-50 active:scale-95"
-                      >
-                        <Trash2 size={17} />
-                      </button>
+                      <AlertDialog>
+                        <AlertDialogTrigger
+                          className="
+                            rounded-xl
+                            border
+                            border-red-200
+                            p-2.5
+                            text-red-600
+                            transition
+                            hover:bg-red-50
+                            active:scale-95
+                          "
+                        >
+                          <Trash2 size={17} />
+                        </AlertDialogTrigger>
+
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Product?</AlertDialogTitle>
+
+                            <AlertDialogDescription>
+                              This product will be moved to recycle bin. You can
+                              restore it later.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                            <AlertDialogAction
+                              onClick={() => deleteProductHandler(product.id)}
+                              className="
+                                bg-red-600
+                                hover:bg-red-700
+                              "
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </td>
                 </tr>

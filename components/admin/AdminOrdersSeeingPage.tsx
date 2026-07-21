@@ -1,5 +1,6 @@
 "use client";
 
+import { orderStatus } from "@/types/orderStatus";
 import { useEffect, useState } from "react";
 
 interface Product {
@@ -86,6 +87,36 @@ export default function AdminOrdersSeeingPage() {
     }
   };
 
+  const updateOrderStatus = async (orderID: number, status: orderStatus) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3100/orders/${orderID}/status`,
+        {
+          method: "PATCH",
+
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            status,
+          }),
+        },
+      );
+
+      const data = await res.json();
+      const updatedOrder = data;
+      setOrders((prev) =>
+        prev.map((order) =>
+          order.id === updatedOrder.id ? updatedOrder : order,
+        ),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (loading) {
     return <div className="flex justify-center py-20">Loading Orders...</div>;
   }
@@ -152,10 +183,12 @@ export default function AdminOrdersSeeingPage() {
                 </p>
 
                 <p className="font-semibold text-gray-900">
-                  {order.user.name ?? "Unknown"}
+                  {order?.user?.name ?? "Unknown"}
                 </p>
 
-                <p className="mt-1 text-sm text-gray-500">{order.user.email}</p>
+                <p className="mt-1 text-sm text-gray-500">
+                  {order?.user?.email}
+                </p>
               </div>
 
               <div className="rounded-2xl bg-gray-50 p-5">
@@ -163,9 +196,9 @@ export default function AdminOrdersSeeingPage() {
                   Delivery Information
                 </p>
 
-                <p className="font-medium text-gray-900">{order.phone}</p>
+                <p className="font-medium text-gray-900">{order?.phone}</p>
 
-                <p className="mt-2 text-sm text-gray-600">{order.address}</p>
+                <p className="mt-2 text-sm text-gray-600">{order?.address}</p>
               </div>
             </div>
 
@@ -176,7 +209,7 @@ export default function AdminOrdersSeeingPage() {
               </h3>
 
               <div className="space-y-3">
-                {order.items.map((item) => (
+                {order?.items?.map((item) => (
                   <div
                     key={item.id}
                     className="flex items-center justify-between rounded-2xl border border-gray-100 bg-gray-50 px-5 py-4"
@@ -209,22 +242,34 @@ export default function AdminOrdersSeeingPage() {
                 </p>
               </div>
 
-              <button
+              <select
+                value={order.status}
+                onChange={(e) =>
+                  updateOrderStatus(order.id, e.target.value as orderStatus)
+                }
                 className="
-                rounded-xl
-                bg-black
-                px-6
-                py-3
-                text-sm
-                font-semibold
-                text-white
-                transition
-                hover:bg-gray-800
-                active:scale-95
-              "
+                          rounded-xl
+                          border
+                          border-gray-300
+                          bg-white
+                          px-4
+                          py-3
+                          text-sm
+                          font-medium
+                          text-gray-700
+                          outline-none
+                          transition
+                          focus:border-black
+                          focus:ring-2
+                          focus:ring-gray-200
+                        "
               >
-                Update Status
-              </button>
+                <option value="PENDING">Pending</option>
+                <option value="CONFIRMED">Confirmed</option>
+                <option value="SHIPPED">Shipped</option>
+                <option value="DELIVERED">Delivered</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
             </div>
           </div>
         ))}

@@ -1,5 +1,5 @@
 import ProductDetailClient from "@/components/ProductDetailClient";
-
+import { getProduct } from "@/services/product.service";
 
 interface Props {
   params: {
@@ -7,43 +7,11 @@ interface Props {
   };
 }
 
-type Product = {
-  id: number;
-  name: string;
-  description?: string;
-  image?: string;
-  price: number;
-  stock: number;
-  category?: {
-    id: number;
-    name: string;
-  };
-  reviews?: {
-    id: number;
-    rating: number;
-    comment: string;
-  }[];
-};
-
-async function getProduct(id: string): Promise<Product> {
-  const res = await fetch(`http://localhost:3100/product/${id}`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch product");
-  }
-
-  return res.json();
-}
-
-
-
 const ProductDetail = async ({ params }: Props) => {
   const { id } = await params;
-  const product = await getProduct(id);
+  const data  = await getProduct(Number(id));
 
-  return <ProductDetailClient product={product} />
+  return <ProductDetailClient product={data} />
 };
 
 export default ProductDetail;
