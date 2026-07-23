@@ -1,5 +1,5 @@
-import ProductDetailClient from "@/components/ProductDetailClient";
-import { getProduct } from "@/services/product.service";
+import ProductDetailClient from "@/component-of-product/ProductDetailClient";
+import { getProduct } from "@/services/Product/product.service";
 
 interface Props {
   params: {

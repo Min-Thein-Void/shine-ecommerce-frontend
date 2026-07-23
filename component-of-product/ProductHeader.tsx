@@ -1,6 +1,6 @@
 import CategoriesList from "@/components/CategoriesList";
-import SearchByPriceInput from "@/components/SearchByPriceInput";
-import SearchInput from "@/components/SearchInput";
+import SearchByPriceInput from "@/component-of-search&filter/SearchByPriceInput";
+import SearchInput from "@/component-of-search&filter/SearchInput";
 
 function ProductHeader() {
   return (

@@ -1,4 +1,4 @@
-import MyOrdersHistory from "@/components/MyOrdersHistory"
+import MyOrdersHistory from "@/component-of-order/MyOrdersHistory"
 
 function page() {
 

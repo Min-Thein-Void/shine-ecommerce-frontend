@@ -1,4 +1,4 @@
-import AdminMainPage from "@/components/admin/AdminMainPage"
+import AdminMainPage from "@/adminSide-components/admin/AdminMainPage"
 
 
 function admin() {

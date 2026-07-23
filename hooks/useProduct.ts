@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useCategories } from "@/hooks/useCategories";
-import { createProduct, editProduct } from "@/services/product.service";
+import { createProduct, editProduct } from "@/services/Product/product.service";
 import { Product } from "@/types/product";
 
 export function useProduct(editingProduct: Product | null) {

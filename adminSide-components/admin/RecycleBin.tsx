@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import {
   getDeletedProducts,
   restoreProductById,
-} from "@/services/product.service";
+} from "@/services/Product/product.service";
 import { Product } from "@/types/product";
 import { RotateCcw, Trash2 } from "lucide-react";
 
