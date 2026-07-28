@@ -1,4 +1,4 @@
-import { Review } from "@/types/products";
+import { Review } from "@/types/product";
 
 interface ReviewsProps {
   reviews: Review[];

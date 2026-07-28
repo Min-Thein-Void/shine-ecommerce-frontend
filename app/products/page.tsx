@@ -23,6 +23,8 @@ export default async function Page({ searchParams }: ProductsFilterProps) {
     page,
   });
 
+  console.log(response.data)
+
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
       {/* Header */}

@@ -12,7 +12,7 @@ export function useProduct(editingProduct: Product | null) {
     price: "",
     categoryId: "",
     stock: "",
-    image: null as File | null,
+    images: [] as File[],
   });
 
   const handleChange = (
@@ -29,11 +29,11 @@ export function useProduct(editingProduct: Product | null) {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] ?? null;
+    const files = Array.from(e.target.files ?? []);
 
     setFormData((prev) => ({
       ...prev,
-      image: file,
+      images: [...prev.images, ...files],
     }));
   };
 
@@ -66,11 +66,11 @@ export function useProduct(editingProduct: Product | null) {
 
     setFormData({
       name: editingProduct.name,
-      description: editingProduct.description,
+      description: editingProduct.description ?? "",
       price: editingProduct.price.toString(),
       categoryId: editingProduct.categoryId.toString(),
       stock: editingProduct.stock.toString(),
-      image: null,
+      images: [],
     });
   }, [editingProduct]);
 

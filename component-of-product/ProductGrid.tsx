@@ -1,4 +1,4 @@
-import { Product } from "@/types/products";
+import { Product } from "@/types/product";
 import Link from "next/link";
 
 type ProductGridProps = {

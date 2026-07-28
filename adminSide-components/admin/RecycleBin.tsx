@@ -5,8 +5,9 @@ import {
   getDeletedProducts,
   restoreProductById,
 } from "@/services/Product/product.service";
-import { Product } from "@/types/product";
+
 import { RotateCcw, Trash2 } from "lucide-react";
+import { Product } from "@/types/product";
 
 function RecycleBin() {
   const [products, setProducts] = useState<Product[]>([]);

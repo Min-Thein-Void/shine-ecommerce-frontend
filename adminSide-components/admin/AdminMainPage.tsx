@@ -5,10 +5,11 @@ import { useState } from "react";
 import AdminProductsSeeingPage from "./AdminProductsSeeingPage";
 import AdminOrdersSeeingPage from "./AdminOrdersSeeingPage";
 import AdminCreateAndEditProduct from "./AdminCreateAndEditProduct";
-import { Product } from "@/types/product";
+
 import { AdminPage } from "@/types/admin";
 import RecycleBin from "./RecycleBin";
 import AdminSideBar from "./AdminSideBar";
+import { Product } from "@/types/product";
 
 function AdminMainPage() {
   const [activePage, setActivePage] = useState<AdminPage>("products");

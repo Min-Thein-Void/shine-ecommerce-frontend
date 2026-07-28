@@ -108,14 +108,20 @@ function AdminProductForm({ editingProduct }: AdminProductFormProps) {
         "
         >
           <div className="text-center">
-            <p className="font-medium text-gray-700">Upload Product Image</p>
+            <p className="font-medium text-gray-700">Upload Product Images</p>
 
             <p className="mt-1 text-xs text-gray-400">
               PNG, JPG up to your allowed size
             </p>
           </div>
 
-          <input type="file" onChange={handleImageChange} className="hidden" />
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
         </label>
       </div>
 

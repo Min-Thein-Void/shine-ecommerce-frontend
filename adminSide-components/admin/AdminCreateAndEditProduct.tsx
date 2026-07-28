@@ -1,6 +1,7 @@
 "use client";
-import AdminProductForm from "./AdminProductForm";
 import { Product } from "@/types/product";
+import AdminProductForm from "./AdminProductForm";
+
 
 interface AdminCreateAndEditProductProps {
   editingProduct: Product | null;

@@ -3,7 +3,7 @@ import ProductInfo from "@/component-of-product/ProductInfo";
 import Reviews from "@/component-of-reviews/Reviews";
 import WriteReview from "@/component-of-reviews/WriteReview";
 import { fetchProductReviewById } from "@/services/Review/review.service";
-import { Product } from "@/types/products";
+import { Product } from "@/types/product";
 import { useEffect, useState } from "react";
 
 interface ProductDetailClientProps {

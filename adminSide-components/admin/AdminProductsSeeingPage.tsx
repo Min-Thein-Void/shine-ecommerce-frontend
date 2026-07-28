@@ -20,9 +20,10 @@ import {
   getProducts,
   increaseStock,
 } from "@/services/Product/product.service";
-import { Product } from "@/types/product";
+
 import { AdminPage } from "@/types/admin";
 import ProductsPagePagination from "../../component-of-product/ProductsPagePagination";
+import { Product } from "@/types/product";
 
 interface AdminProductsSeeingPageProps {
   setEditingProduct: Dispatch<SetStateAction<Product | null>>;

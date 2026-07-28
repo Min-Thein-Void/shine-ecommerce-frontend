@@ -1,7 +1,8 @@
 "use client";
 import { useCartStore } from "@/globalStates/useCartStore";
-import { Product } from "@/types/products";
+import { Product } from "@/types/product";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type ProductInfoProps = {
   product: Product;
@@ -10,6 +11,11 @@ type ProductInfoProps = {
 function ProductInfo({ product }: ProductInfoProps) {
   const router = useRouter();
   const addToCart = useCartStore((state) => state.addToCart);
+
+  const [selectedImage, setSelectedImage] = useState(
+    product.images?.[0]?.image || product.image,
+  );
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const avgRating =
     product.reviews && product.reviews.length > 0
@@ -21,17 +27,56 @@ function ProductInfo({ product }: ProductInfoProps) {
 
   return (
     <div className="grid gap-10 lg:grid-cols-2">
-      {/* Image */}
-      <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
-        {product.image ? (
-          <img
-            src={`http://localhost:3100/uploads/${product.image}`}
-            alt={product.name}
-            className="h-130 w-full rounded-2xl object-cover"
-          />
-        ) : (
-          <div className="flex h-130 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
-            No Image
+      {/* Image Section */}
+      <div>
+        <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+          {selectedImage ? (
+            <img
+              src={`http://localhost:3100/uploads/${selectedImage}`}
+              alt={product.name}
+              onClick={() => setIsPreviewOpen(true)}
+              className="
+    h-130
+    w-full
+    cursor-pointer
+    rounded-2xl
+    object-cover
+    transition
+    hover:scale-[1.02]
+  "
+            />
+          ) : (
+            <div className="flex h-130 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
+              No Image
+            </div>
+          )}
+        </div>
+
+        {/* Thumbnails */}
+        {product.images && product.images.length > 1 && (
+          <div className="mt-5 flex gap-3 overflow-x-auto">
+            {product.images.map((img) => (
+              <button
+                key={img.id}
+                onClick={() => setSelectedImage(img.image)}
+                className="shrink-0"
+              >
+                <img
+                  src={`http://localhost:3100/uploads/${img.image}`}
+                  alt={product.name}
+                  className={`
+              h-20
+              w-20
+              rounded-xl
+              object-cover
+              border
+              ${
+                selectedImage === img.image ? "border-black" : "border-gray-200"
+              }
+            `}
+                />
+              </button>
+            ))}
           </div>
         )}
       </div>
@@ -118,6 +163,55 @@ function ProductInfo({ product }: ProductInfoProps) {
           </button>
         </div>
       </div>
+      {isPreviewOpen && selectedImage && (
+        <div
+          className="
+      fixed
+      inset-0
+      z-50
+      flex
+      items-center
+      justify-center
+      bg-black/80
+      p-5
+    "
+          onClick={() => setIsPreviewOpen(false)}
+        >
+          <div
+            className="
+        relative
+        max-h-[90vh]
+        max-w-5xl
+      "
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setIsPreviewOpen(false)}
+              className="
+          absolute
+          right-0
+          top-0
+          z-10
+          -translate-y-12
+          text-3xl
+          text-white
+        "
+            >
+              ×
+            </button>
+
+            <img
+              src={`http://localhost:3100/uploads/${selectedImage}`}
+              alt={product.name}
+              className="
+          max-h-[85vh]
+          rounded-2xl
+          object-contain
+        "
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

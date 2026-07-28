@@ -66,7 +66,6 @@ export async function getProducts(page: number = 1) {
     if (!res.ok) {
       throw new Error(data.message);
     }
-
     return data;
   } catch (error: any) {
     console.log(error.message);
@@ -124,6 +123,8 @@ export async function editProduct(
 //product create lote yin lo tae formData
 export function buildFormData(formData: ProductFormData) {
   const data = new FormData();
+   console.log("SELECTED IMAGES:", formData.images);
+  console.log("IMAGE COUNT:", formData.images.length);
 
   data.append("name", formData.name);
   data.append("description", formData.description);
@@ -131,9 +132,10 @@ export function buildFormData(formData: ProductFormData) {
   data.append("categoryId", formData.categoryId);
   data.append("stock", formData.stock);
 
-  if (formData.image) {
-    data.append("image", formData.image);
-  }
+  formData.images.forEach((image) => {
+    data.append("images", image);
+  });
+
   return data;
 }
 
