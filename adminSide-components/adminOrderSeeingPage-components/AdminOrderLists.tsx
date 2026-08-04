@@ -1,68 +1,24 @@
-"use client";
-
+import { updateOrderStatus } from "@/services/Order/order.service";
+import { Order } from "@/types/admin/adminOrder";
 import { orderStatus } from "@/types/orderStatus";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
-interface Product {
-  id: number;
-  name: string;
+interface adminOrderListsProps {
+  orders: Order[];
+  setOrders: Dispatch<SetStateAction<Order[]>>; //adminOrderSeeingPage ka nay emit lote htar tar
 }
 
-interface OrderItem {
-  id: number;
-  quantity: number;
-  price: number;
-  product: Product;
-}
-
-interface User {
-  id: number;
-  name: string | null;
-  email: string;
-}
-
-interface Order {
-  id: number;
-  total: number;
-  phone: string;
-  address: string;
-  status: "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED";
-  createdAt: string;
-  user: User;
-  items: OrderItem[];
-}
-
-export default function AdminOrdersSeeingPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    getOrders();
-  }, []);
-
-  const getOrders = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      const res = await fetch("http://localhost:3100/orders", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message);
-      }
-
-      setOrders(data);
-    } catch (err: any) {
-      setMessage(err.message);
-    } finally {
-      setLoading(false);
-    }
+function AdminOrderLists({ orders, setOrders }: adminOrderListsProps) {
+  const updateOrderStatusHandler = async (
+    orderId: number,
+    status: orderStatus,
+  ) => {
+    const updatedOrder = await updateOrderStatus(orderId, status); //service
+    setOrders((prev) =>
+      prev.map((order) =>
+        order.id === updatedOrder.id ? updatedOrder : order,
+      ),
+    );
   };
 
   const statusColor = (status: Order["status"]) => {
@@ -87,67 +43,8 @@ export default function AdminOrdersSeeingPage() {
     }
   };
 
-  const updateOrderStatus = async (orderID: number, status: orderStatus) => {
-    try {
-      const res = await fetch(
-        `http://localhost:3100/orders/${orderID}/status`,
-        {
-          method: "PATCH",
-
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-          },
-
-          body: JSON.stringify({
-            status,
-          }),
-        },
-      );
-
-      const data = await res.json();
-      const updatedOrder = data;
-      setOrders((prev) =>
-        prev.map((order) =>
-          order.id === updatedOrder.id ? updatedOrder : order,
-        ),
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  if (loading) {
-    return <div className="flex justify-center py-20">Loading Orders...</div>;
-  }
-
   return (
-    <div>
-      {/* Header */}
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            Orders
-          </h1>
-
-          <p className="mt-1 text-sm text-gray-500">
-            Manage customer orders and update delivery status.
-          </p>
-        </div>
-
-        <div className="rounded-full border border-gray-200 bg-gray-50 px-5 py-2 text-sm font-semibold text-gray-700">
-          Total Orders: <span className="text-black">{orders.length}</span>
-        </div>
-      </div>
-
-      {/* Error */}
-      {message && (
-        <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-medium text-red-600">
-          {message}
-        </div>
-      )}
-
-      {/* Orders */}
+    <>
       <div className="space-y-6">
         {orders.map((order) => (
           <div
@@ -245,7 +142,10 @@ export default function AdminOrdersSeeingPage() {
               <select
                 value={order.status}
                 onChange={(e) =>
-                  updateOrderStatus(order.id, e.target.value as orderStatus)
+                  updateOrderStatusHandler(
+                    order.id,
+                    e.target.value as orderStatus,
+                  )
                 }
                 className="
                           rounded-xl
@@ -288,6 +188,8 @@ export default function AdminOrdersSeeingPage() {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
+
+export default AdminOrderLists;

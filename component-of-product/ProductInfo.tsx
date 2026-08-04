@@ -36,14 +36,14 @@ function ProductInfo({ product }: ProductInfoProps) {
               alt={product.name}
               onClick={() => setIsPreviewOpen(true)}
               className="
-    h-130
-    w-full
-    cursor-pointer
-    rounded-2xl
-    object-cover
-    transition
-    hover:scale-[1.02]
-  "
+                          h-130
+                          w-full
+                          cursor-pointer
+                          rounded-2xl
+                          object-cover
+                          transition
+                          hover:scale-[1.02]
+                        "
             />
           ) : (
             <div className="flex h-130 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">

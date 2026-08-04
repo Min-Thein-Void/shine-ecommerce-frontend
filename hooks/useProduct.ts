@@ -43,7 +43,7 @@ export function useProduct(editingProduct: Product | null) {
     e.preventDefault();
 
     if (!isEditMode) {
-      const res = await createProduct(formData);
+      const res = await createProduct(formData); //service
       if (!res.ok) {
         alert("Create Product Failed");
         return;
@@ -52,7 +52,7 @@ export function useProduct(editingProduct: Product | null) {
     }
 
     if (isEditMode) {
-      const res = await editProduct(editingProduct?.id, formData);
+      const res = await editProduct(editingProduct?.id, formData); //service
       if (!res.ok) {
         alert("Update Product Failed");
         return;

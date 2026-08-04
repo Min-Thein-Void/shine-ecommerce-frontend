@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 
-import AdminProductsSeeingPage from "./AdminProductsSeeingPage";
-import AdminOrdersSeeingPage from "./AdminOrdersSeeingPage";
-import AdminCreateAndEditProduct from "./AdminCreateAndEditProduct";
+import AdminProductsSeeingPage from "../adminProductSeeingPage-components/AdminProductsSeeingPage";
+import AdminOrdersSeeingPage from "../adminOrderSeeingPage-components/AdminOrdersSeeingPage";
+import AdminCreateAndEditProduct from "../adminProductCreateComponents/AdminCreateAndEditProduct";
 
 import { AdminPage } from "@/types/admin";
 import RecycleBin from "./RecycleBin";

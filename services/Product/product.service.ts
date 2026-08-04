@@ -57,18 +57,30 @@ export async function getProductsWithQuery(filters: {
 }
 
 // Backend ka products data tay ko u tar
-export async function getProducts(page: number = 1) {
+export async function getProducts(page: number = 1, search: string = "") {
   try {
-    const res = await fetch(`http://localhost:3100/product?page=${page}`);
+    const params = new URLSearchParams();
+
+    params.set("page", page.toString());
+
+    if (search.trim()) {
+      params.set("search", search.trim());
+    }
+
+    const res = await fetch(
+      `http://localhost:3100/product?${params.toString()}`,
+    );
 
     const data = await res.json();
 
     if (!res.ok) {
       throw new Error(data.message);
     }
+
     return data;
   } catch (error: any) {
     console.log(error.message);
+    throw error;
   }
 }
 
@@ -123,7 +135,7 @@ export async function editProduct(
 //product create lote yin lo tae formData
 export function buildFormData(formData: ProductFormData) {
   const data = new FormData();
-   console.log("SELECTED IMAGES:", formData.images);
+  console.log("SELECTED IMAGES:", formData.images);
   console.log("IMAGE COUNT:", formData.images.length);
 
   data.append("name", formData.name);

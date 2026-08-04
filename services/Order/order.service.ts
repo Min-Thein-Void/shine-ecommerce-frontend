@@ -1,3 +1,5 @@
+import { orderStatus } from "@/types/orderStatus";
+
 export const getMyOrders = async () => {
   try {
     const res = await fetch("http://localhost:3100/orders/me", {
@@ -39,3 +41,48 @@ export async function checkout(phone: string, address: string) {
 
   return data;
 }
+
+export const getOrders = async () => {
+  try {
+    const res = await fetch("http://localhost:3100/orders", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+
+    return data;
+  } catch (err: any) {
+    console.log(err);
+  }
+};
+
+export const updateOrderStatus = async (
+  orderID: number,
+  status: orderStatus,
+) => {
+  try {
+    const res = await fetch(`http://localhost:3100/orders/${orderID}/status`, {
+      method: "PATCH",
+
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        status,
+      }),
+    });
+
+    const updatedOrder = await res.json();
+    return updatedOrder;
+  } catch (error) {
+    console.log(error);
+  }
+};

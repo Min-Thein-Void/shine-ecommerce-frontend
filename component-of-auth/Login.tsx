@@ -30,10 +30,15 @@ function Login() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     setLoading(true);
     setError("");
 
     try {
+      // =========================
+      // LOGIN
+      // =========================
+
       const res = await fetch("http://localhost:3100/auth/login", {
         method: "POST",
         headers: {
@@ -48,14 +53,33 @@ function Login() {
 
       const data = await res.json();
 
-      console.log(data);
-
-      updateUser(data.user);
-
-      // 👉 assuming backend returns { access_token: "..." }
+      // Save token first
       localStorage.setItem("token", data.access_token);
 
-      // redirect after login
+      // =========================
+      // GET FULL USER PROFILE
+      // =========================
+
+      const profileRes = await fetch("http://localhost:3100/users/profile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${data.access_token}`,
+        },
+      });
+
+      if (!profileRes.ok) {
+        throw new Error("Failed to load profile");
+      }
+
+      const user = await profileRes.json();
+
+      // Save FULL user into Zustand
+      updateUser(user);
+
+      // =========================
+      // REDIRECT
+      // =========================
+
       router.push("/products");
     } catch (err) {
       setError("Login failed");
