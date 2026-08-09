@@ -1,5 +1,7 @@
+"use client";
 import { useProduct } from "@/hooks/useProduct";
 import { Product } from "@/types/product";
+import { useEffect, useState } from "react";
 
 interface AdminProductFormProps {
   editingProduct: Product | null;
@@ -13,6 +15,31 @@ function AdminProductForm({ editingProduct }: AdminProductFormProps) {
     handleImageChange,
     categories,
   } = useProduct(editingProduct);
+
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+
+  const handlePreviewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleImageChange(e);
+
+    const files = e.target.files;
+
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    const imageUrls = Array.from(files).map((file) =>
+      URL.createObjectURL(file),
+    );
+    setPreviewImages(imageUrls);
+  };
+
+  useEffect(() => {
+    return () => {
+      previewImages.forEach((url) => {
+        URL.revokeObjectURL(url);
+      });
+    };
+  }, [previewImages]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -119,10 +146,31 @@ function AdminProductForm({ editingProduct }: AdminProductFormProps) {
             type="file"
             multiple
             accept="image/*"
-            onChange={handleImageChange}
+            onChange={handlePreviewChange}
             className="hidden"
           />
         </label>
+        {/* Image Preview */}
+        {previewImages.length > 0 && (
+          <div className="mt-4">
+            <p className="mb-3 text-sm font-semibold text-gray-700">Preview</p>
+
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+              {previewImages.map((image, index) => (
+                <div
+                  key={image}
+                  className="relative aspect-square overflow-hidden rounded-xl border border-gray-200 bg-gray-100"
+                >
+                  <img
+                    src={image}
+                    alt={`Product preview ${index + 1}`}
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Price + Stock */}

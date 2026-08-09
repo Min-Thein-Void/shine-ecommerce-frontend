@@ -1,1 +1,1 @@
-export type AdminPage = "products" | "orders" | "create" | "recyclebin";
+export type AdminPage = "dashboard" | "products" | "orders" | "create" | "recyclebin";

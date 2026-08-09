@@ -48,6 +48,20 @@ function AdminSideBar({ activePage, setActivePage }: AdminSideBarProps) {
       {/* Navigation */}
       <nav className="flex-1 space-y-2 p-4">
         <button
+          title="dashboard"
+          onClick={() => setActivePage("dashboard")}
+          className={`flex w-full items-center rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
+            collapsed ? "justify-center" : "gap-3"
+          } ${
+            activePage === "dashboard"
+              ? "bg-black text-white shadow-sm"
+              : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+          }`}
+        >
+          <Package size={20} />
+          {!collapsed && <span>dashboard</span>}
+        </button>
+        <button
           title="Products"
           onClick={() => setActivePage("products")}
           className={`flex w-full items-center rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
