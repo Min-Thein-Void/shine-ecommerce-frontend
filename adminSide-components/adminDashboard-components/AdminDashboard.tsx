@@ -1,15 +1,21 @@
 "use client";
 
+import { Dispatch, SetStateAction } from "react";
 import DashboardHeader from "./DashboardHeader";
 import DashboardStats from "./DashboardStats";
 import RevenueChart from "./RevenueChart";
+import { AdminPage } from "@/types/admin";
 
-export default function AdminDashboard() {
+interface Props {
+  setActivePage : Dispatch<SetStateAction<AdminPage>>
+}
+
+export default function AdminDashboard({setActivePage}:Props) {
   return (
     <div>
       <DashboardHeader />
 
-      <DashboardStats/>
+      <DashboardStats setActivePage={setActivePage}/>
 
       <RevenueChart />
     </div>

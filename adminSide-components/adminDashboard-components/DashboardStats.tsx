@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { AdminPage } from "@/types/admin";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface DashboardStats {
   totalCustomers: number;
@@ -10,7 +11,11 @@ interface DashboardStats {
   pendingOrders: number;
 }
 
-export default function DashboardStats() {
+interface Props {
+  setActivePage: Dispatch<SetStateAction<AdminPage>>;
+}
+
+export default function DashboardStats({ setActivePage }: Props) {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -57,6 +62,7 @@ export default function DashboardStats() {
         ? "Loading..."
         : `${stats?.totalCustomers.toLocaleString() ?? 0} People`,
       css: "text-green-500",
+      routeName: "dashboard",
     },
     {
       title: "Total Revenue",
@@ -64,6 +70,7 @@ export default function DashboardStats() {
         ? "Loading..."
         : `${stats?.totalRevenue.toLocaleString() ?? 0} MMK`,
       css: "text-yellow-500",
+      routeName: "dashboard",
     },
     {
       title: "Total Orders",
@@ -71,6 +78,7 @@ export default function DashboardStats() {
         ? "Loading..."
         : (stats?.totalOrders.toLocaleString() ?? "0"),
       css: "text-blue-500",
+      routeName: "orders",
     },
     {
       title: "Total Products",
@@ -78,6 +86,7 @@ export default function DashboardStats() {
         ? "Loading..."
         : (stats?.totalProducts.toLocaleString() ?? "0"),
       css: "text-purple-500",
+      routeName: "products",
     },
     {
       title: "Pending Orders",
@@ -85,6 +94,7 @@ export default function DashboardStats() {
         ? "Loading..."
         : (stats?.pendingOrders.toLocaleString() ?? "0"),
       css: "text-orange-500",
+      routeName: "orders",
     },
   ];
 
@@ -93,11 +103,14 @@ export default function DashboardStats() {
       {statsData.map((stat) => (
         <div
           key={stat.title}
-          className="rounded-2xl border border-gray-200 bg-white p-6"
+          onClick={() => setActivePage(stat.routeName as AdminPage)}
+          className="rounded-2xl border border-gray-200 bg-white p-6 cursor-pointer hover:scale-105 transition duration-300"
         >
           <p className="text-sm font-medium text-gray-500">{stat.title}</p>
 
-          <p className={`mt-2 text-2xl font-bold text-gray-900 ${stat.css}`}>{stat.value}</p>
+          <p className={`mt-2 text-2xl font-bold text-gray-900 ${stat.css}`}>
+            {stat.value}
+          </p>
         </div>
       ))}
     </div>

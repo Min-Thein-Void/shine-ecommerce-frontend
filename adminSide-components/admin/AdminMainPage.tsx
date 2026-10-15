@@ -28,7 +28,7 @@ function AdminMainPage() {
             <div className="min-h-[calc(100vh-4rem)] rounded-3xl border border-gray-200 bg-white p-6 shadow-sm lg:p-8">
               {
                 activePage === "dashboard" && (
-                  <AdminDashboard/>
+                  <AdminDashboard setActivePage={setActivePage}/>
                 )
               }
               {/* Page Content */}
