@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dispatch, SetStateAction } from "react";
 import {
   AlertCircle,
@@ -11,10 +11,12 @@ import {
   UserRound,
 } from "lucide-react";
 
-import { updateOrderStatus } from "@/services/Order/order.service";
+import { filterOrder, updateOrderStatus } from "@/services/Order/order.service";
 import { Order } from "@/types/admin/adminOrder";
 import { orderStatus } from "@/types/orderStatus";
 import AdminOrderFilterByTags from "./AdminOrderFilterByTags";
+import AdminOrderSearchInput from "./AdminOrderSearchInput";
+import { useSearchParams } from "next/navigation";
 
 interface AdminOrderListsProps {
   orders: Order[];
@@ -77,6 +79,26 @@ function AdminOrderLists({ orders, setOrders }: AdminOrderListsProps) {
       : orders.filter((order) => order.status === activeFilter);
   //order filter by tags
 
+  //order filter by name 
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") ?? "";
+  useEffect(() => {
+    const loadOrders = async () => {
+      try {
+        const data = await filterOrder(search);
+
+        console.log("Search keyword:", search);
+        console.log("Orders response:", data);
+
+        setOrders(data);
+      } catch (error) {
+        console.error("Failed to load orders:", error);
+      }
+    };
+    loadOrders();
+  }, [search]);
+  //order filter by name 
+
   return (
     <div className="space-y-5">
       {/* Header */}
@@ -95,11 +117,14 @@ function AdminOrderLists({ orders, setOrders }: AdminOrderListsProps) {
       </div>
 
       {/* Order Status Filters */}
-      <AdminOrderFilterByTags
-        orders={orders}
-        activeFilter={activeFilter}
-        setActiveFilter={setActiveFilter}
-      />
+      <div className="flex justify-between">
+        <AdminOrderSearchInput />
+        <AdminOrderFilterByTags
+          orders={orders}
+          activeFilter={activeFilter}
+          setActiveFilter={setActiveFilter}
+        />
+      </div>
 
       {/* Orders Table */}
       {filteredOrders.length > 0 ? (

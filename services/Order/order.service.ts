@@ -86,3 +86,26 @@ export const updateOrderStatus = async (
     console.log(error);
   }
 };
+
+export const filterOrder = async (search: string) => {
+  const params = new URLSearchParams();
+  const keyword = search.trim();
+
+  if (keyword) {
+    params.set("search", keyword);
+  }
+
+  const res = await fetch(`http://localhost:3100/orders?${params.toString()}`, {
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch orders");
+  }
+  const data = await res.json();
+
+  return data;
+};
