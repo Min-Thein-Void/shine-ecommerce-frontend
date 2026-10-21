@@ -43,7 +43,9 @@ function AdminOrderLists({ orders, setOrders }: AdminOrderListsProps) {
 
       setOrders((prev) =>
         prev.map((order) =>
-          order.id === updatedOrder.id ? updatedOrder : order,
+          order.id === updatedOrder.id
+            ? { ...order, status: updatedOrder.status }
+            : order,
         ),
       );
     } catch (error) {
@@ -79,25 +81,26 @@ function AdminOrderLists({ orders, setOrders }: AdminOrderListsProps) {
       : orders.filter((order) => order.status === activeFilter);
   //order filter by tags
 
-  //order filter by name 
+  //order filter by name
   const searchParams = useSearchParams();
+
+  const pageFromUrl = Number(searchParams.get("page")) || 1;
   const search = searchParams.get("search") ?? "";
+
+  const getOrdersHandler = async (page: number = 1, search: string = "") => {
+    try {
+      const response = await filterOrder(search, page, 8);
+
+      setOrders(response.orders);
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+    }
+  };
+
   useEffect(() => {
-    const loadOrders = async () => {
-      try {
-        const data = await filterOrder(search);
-
-        console.log("Search keyword:", search);
-        console.log("Orders response:", data);
-
-        setOrders(data);
-      } catch (error) {
-        console.error("Failed to load orders:", error);
-      }
-    };
-    loadOrders();
-  }, [search]);
-  //order filter by name 
+    getOrdersHandler(pageFromUrl, search);
+  }, [pageFromUrl, search]);
+  //order filter by name
 
   return (
     <div className="space-y-5">
