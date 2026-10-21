@@ -42,26 +42,6 @@ export async function checkout(phone: string, address: string) {
   return data;
 }
 
-export const getOrders = async () => {
-  try {
-    const res = await fetch("http://localhost:3100/orders", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-
-    return data;
-  } catch (err: any) {
-    console.log(err);
-  }
-};
-
 export const updateOrderStatus = async (
   orderID: number,
   status: orderStatus,
@@ -87,13 +67,20 @@ export const updateOrderStatus = async (
   }
 };
 
-export const filterOrder = async (search: string) => {
+export const filterOrder = async (
+  search: string,
+  page: number = 1,
+  limit: number = 8,
+) => {
   const params = new URLSearchParams();
   const keyword = search.trim();
 
   if (keyword) {
     params.set("search", keyword);
   }
+
+  params.set("page", String(page));
+  params.set("limit", String(limit));
 
   const res = await fetch(`http://localhost:3100/orders?${params.toString()}`, {
     cache: "no-store",
@@ -109,3 +96,23 @@ export const filterOrder = async (search: string) => {
 
   return data;
 };
+
+// export const getOrders = async () => {
+//   try {
+//     const res = await fetch("http://localhost:3100/orders", {
+//       headers: {
+//         Authorization: `Bearer ${localStorage.getItem("token")}`,
+//       },
+//     });
+
+//     const data = await res.json();
+
+//     if (!res.ok) {
+//       throw new Error(data.message);
+//     }
+
+//     return data;
+//   } catch (err: any) {
+//     console.log(err);
+//   }
+// };
