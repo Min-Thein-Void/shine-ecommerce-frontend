@@ -1,3 +1,4 @@
+
 import { Minus, Plus } from "lucide-react";
 
 interface ProductStockControlProps {
@@ -12,27 +13,33 @@ export default function ProductStockControl({
   onDecrease,
 }: ProductStockControlProps) {
   return (
-    <div className="flex items-center gap-3">
+    <div className="inline-flex max-w-full items-center gap-2 sm:gap-3">
       <button
+        type="button"
         onClick={onDecrease}
-        className="rounded-lg border border-gray-200 p-2 text-gray-600 transition hover:bg-gray-100 active:scale-95"
+        disabled={stock <= 0}
+        aria-label="Decrease stock"
+        className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-600 transition hover:bg-gray-100 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 sm:size-9"
       >
         <Minus size={16} />
       </button>
 
       <span
-        className={`min-w-12 rounded-full px-3 py-1 text-center text-sm font-semibold ${
+        aria-label={`Stock: ${stock}`}
+        className={`min-w-12 shrink-0 rounded-full px-3 py-2 text-center text-sm font-semibold tabular-nums ${
           stock <= 5
-            ? "bg-red-100 text-red-600"
-            : "bg-green-100 text-green-700"
+            ? "bg-red-50 text-red-600"
+            : "bg-green-50 text-green-700"
         }`}
       >
         {stock}
       </span>
 
       <button
+        type="button"
         onClick={onIncrease}
-        className="rounded-lg bg-black p-2 text-white transition hover:bg-gray-800 active:scale-95"
+        aria-label="Increase stock"
+        className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-gray-900 text-white transition hover:bg-gray-700 active:scale-95 sm:size-9"
       >
         <Plus size={16} />
       </button>

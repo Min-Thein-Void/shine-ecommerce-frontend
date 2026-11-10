@@ -1,3 +1,6 @@
+
+"use client";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,50 +25,48 @@ export default function ProductActions({
   onDelete,
 }: ProductActionsProps) {
   return (
-    <div className="flex justify-center gap-2">
+    <div className="flex w-full min-w-0 items-center justify-start gap-2 sm:w-auto sm:justify-center">
+      {/* Edit Button */}
       <button
+        type="button"
         onClick={onEdit}
-        className="rounded-xl border border-gray-200 p-2.5 text-gray-700 transition hover:bg-gray-100 active:scale-95"
+        aria-label="Edit product"
+        title="Edit product"
+        className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 transition hover:bg-gray-100 active:scale-95 sm:size-9"
       >
         <Pencil size={17} />
       </button>
 
+      {/* Delete Button */}
       <AlertDialog>
         <AlertDialogTrigger
-          className="
-            rounded-xl
-            border
-            border-red-200
-            p-2.5
-            text-red-600
-            transition
-            hover:bg-red-50
-            active:scale-95
-          "
+          aria-label="Delete product"
+          title="Delete product"
+          className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl border border-red-200 bg-white text-red-600 transition hover:bg-red-50 active:scale-95 sm:size-9"
         >
           <Trash2 size={17} />
         </AlertDialogTrigger>
 
-        <AlertDialogContent>
+        <AlertDialogContent className="w-[calc(100%-2rem)] max-w-lg rounded-xl sm:w-full">
           <AlertDialogHeader>
-            <AlertDialogTitle>
+            <AlertDialogTitle className="text-lg sm:text-xl">
               Delete Product?
             </AlertDialogTitle>
 
-            <AlertDialogDescription>
-              This product will be moved to recycle bin.
+            <AlertDialogDescription className="text-sm leading-6">
+              This product will be moved to the recycle bin.
               You can restore it later.
             </AlertDialogDescription>
           </AlertDialogHeader>
 
-          <AlertDialogFooter>
-            <AlertDialogCancel>
+          <AlertDialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:gap-0">
+            <AlertDialogCancel className="mt-0 w-full sm:w-auto">
               Cancel
             </AlertDialogCancel>
 
             <AlertDialogAction
               onClick={onDelete}
-              className="bg-red-600 hover:bg-red-700"
+              className="w-full bg-red-600 hover:bg-red-700 sm:w-auto"
             >
               Delete
             </AlertDialogAction>

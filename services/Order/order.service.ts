@@ -96,23 +96,3 @@ export const filterOrder = async (
 
   return data;
 };
-
-// export const getOrders = async () => {
-//   try {
-//     const res = await fetch("http://localhost:3100/orders", {
-//       headers: {
-//         Authorization: `Bearer ${localStorage.getItem("token")}`,
-//       },
-//     });
-
-//     const data = await res.json();
-
-//     if (!res.ok) {
-//       throw new Error(data.message);
-//     }
-
-//     return data;
-//   } catch (err: any) {
-//     console.log(err);
-//   }
-// };

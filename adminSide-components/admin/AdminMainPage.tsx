@@ -23,15 +23,16 @@ function AdminMainPage() {
         <AdminSideBar activePage={activePage} setActivePage={setActivePage} />
 
         {/* Main Content */}
-        <main className="flex-1 overflow-hidden">
-          <div className="min-h-screen p-6 lg:p-8">
-            <div className="min-h-[calc(100vh-4rem)] rounded-3xl border border-gray-200 bg-white p-6 shadow-sm lg:p-8">
-              {
-                activePage === "dashboard" && (
-                  <AdminDashboard setActivePage={setActivePage}/>
-                )
-              }
+
+        {/* Main Content */}
+        <main className="min-w-0 flex-1">
+          <div className="min-h-screen min-w-0 px-4 pb-4 pt-20 lg:p-8">
+            <div className="min-h-[calc(100vh-4rem)] min-w-0 rounded-3xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6 lg:p-8">
               {/* Page Content */}
+              {activePage === "dashboard" && (
+                <AdminDashboard setActivePage={setActivePage} />
+              )}
+
               {activePage === "products" && (
                 <AdminProductsSeeingPage
                   setEditingProduct={setEditingProduct}
