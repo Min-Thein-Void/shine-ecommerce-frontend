@@ -20,7 +20,11 @@ export const getMyOrders = async () => {
   }
 };
 
-export async function checkout(phone: string, address: string) {
+export async function checkout(
+  phone: string,
+  address: string,
+  paymentMethod: string,
+) {
   const res = await fetch("http://localhost:3100/orders/checkout", {
     method: "POST",
     headers: {
@@ -30,6 +34,7 @@ export async function checkout(phone: string, address: string) {
     body: JSON.stringify({
       phone,
       address,
+      paymentMethod,
     }),
   });
 

@@ -7,7 +7,7 @@ type ProductGridProps = {
 
 function ProductGrid({ products }: ProductGridProps) {
   return (
-    <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="grid grid-cols-3 gap-2 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 xl:grid-cols-5">
       {products.map((product) => {
         const averageRating =
           product.reviews && product.reviews.length > 0
@@ -23,64 +23,82 @@ function ProductGrid({ products }: ProductGridProps) {
           <Link
             key={product.id}
             href={`/product/${product.id}`}
-            className="group overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 hover:shadow-xl"
+            className="group min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-100/60 sm:rounded-2xl"
           >
-            {/* Image */}
-            <div className="relative overflow-hidden bg-gray-100">
+            {/* Product Image */}
+            <div className="relative aspect-square overflow-hidden bg-slate-50">
               {product.image ? (
                 <img
                   src={`http://localhost:3100/uploads/${product.image}`}
                   alt={product.name}
-                  className="h-64 w-full object-cover transition duration-500 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (
-                <div className="flex h-64 items-center justify-center text-gray-400">
+                <div className="flex h-full items-center justify-center text-xs text-slate-400">
                   No Image
                 </div>
               )}
 
-              <div className="absolute left-4 top-4">
-                <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-gray-700 backdrop-blur">
+              {/* Category */}
+              <div className="absolute left-1.5 top-1.5 sm:left-3 sm:top-3">
+                <span className="block max-w-22.5 truncate rounded-md border border-slate-100 bg-white/95 px-1.5 py-1 text-[9px] font-semibold text-slate-600 shadow-sm backdrop-blur sm:max-w-32.5 sm:rounded-lg sm:px-2.5 sm:text-xs">
                   {product.category?.name || "Uncategorized"}
                 </span>
               </div>
+
+              {/* Stock Badge */}
+              {product.stock === 0 && (
+                <div className="absolute inset-0 flex items-center justify-center bg-slate-900/30">
+                  <span className="rounded-full bg-white px-2 py-1 text-[9px] font-bold text-slate-700 shadow-sm sm:px-3 sm:text-xs">
+                    SOLD OUT
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* Content */}
-            <div className="space-y-4 p-5">
-              <div>
-                <h2 className="line-clamp-1 text-lg font-semibold text-gray-900">
+            {/* Product Content */}
+            <div className="space-y-2 p-2 sm:space-y-3 sm:p-4">
+              {/* Name & Description */}
+              <div className="min-w-0">
+                <h2 className="truncate text-[11px] font-bold text-slate-800 sm:text-base">
                   {product.name}
                 </h2>
 
-                <p className="mt-2 line-clamp-2 text-sm leading-6 text-gray-500">
+                <p className="mt-1 hidden line-clamp-2 text-xs leading-5 text-slate-500 sm:block">
                   {product.description || "No description available."}
                 </p>
               </div>
 
               {/* Rating */}
-              <div className="flex items-center justify-between">
+              <div className="flex min-w-0 items-center gap-1">
                 {averageRating ? (
-                  <div className="flex items-center gap-2">
-                    <span className="text-yellow-500">★★★★★</span>
-                    <span className="text-sm font-medium text-gray-700">
+                  <>
+                    <span className="text-[10px] text-amber-500 sm:text-sm">
+                      ★
+                    </span>
+                    <span className="text-[10px] font-semibold text-slate-700 sm:text-xs">
                       {averageRating}
                     </span>
-                    <span className="text-sm text-gray-400">
-                      ({product?.reviews?.length})
+                    <span className="hidden text-xs text-slate-400 sm:inline">
+                      ({product.reviews?.length})
                     </span>
-                  </div>
+                  </>
                 ) : (
-                  <span className="text-sm text-gray-400">No reviews yet</span>
+                  <span className="truncate text-[9px] text-slate-400 sm:text-xs">
+                    No reviews
+                  </span>
                 )}
+              </div>
 
+              {/* Stock */}
+              <div>
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${
+                  className={`inline-block max-w-full truncate rounded-full px-1.5 py-1 text-[8px] font-semibold sm:px-2.5 sm:text-[10px] ${
                     product.stock > 10
-                      ? "bg-green-100 text-green-700"
+                      ? "bg-emerald-50 text-emerald-700"
                       : product.stock > 0
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-red-100 text-red-700"
+                        ? "bg-amber-50 text-amber-700"
+                        : "bg-rose-50 text-rose-700"
                   }`}
                 >
                   {product.stock > 0
@@ -89,15 +107,20 @@ function ProductGrid({ products }: ProductGridProps) {
                 </span>
               </div>
 
-              {/* Footer */}
-              <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-                <span className="text-2xl font-bold text-gray-900">
-                  {product.price.toLocaleString()} MMK
-                </span>
+              {/* Price */}
+              <div className="border-t border-slate-100 pt-2 sm:pt-3">
+                <p className="truncate text-[10px] font-extrabold text-blue-700 sm:text-lg">
+                  {product.price.toLocaleString()}
+                  <span className="ml-0.5 text-[8px] font-semibold text-slate-500 sm:ml-1 sm:text-xs">
+                    MMK
+                  </span>
+                </p>
 
-                <span className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition group-hover:bg-gray-800">
-                  View
-                </span>
+                <div className="mt-2 hidden sm:block">
+                  <span className="block rounded-lg bg-blue-600 px-3 py-2 text-center text-xs font-semibold text-white transition group-hover:bg-blue-700">
+                    View Product
+                  </span>
+                </div>
               </div>
             </div>
           </Link>

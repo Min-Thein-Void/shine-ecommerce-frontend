@@ -1,3 +1,4 @@
+import { AuthUser } from "@/globalStates/useAuthStore";
 import { Category } from "./category";
 
 export type ProductImage = {
@@ -10,6 +11,7 @@ export type Review = {
   id: number;
   rating: number;
   comment?: string;
+  user : AuthUser;
 };
 
 export type Product = {

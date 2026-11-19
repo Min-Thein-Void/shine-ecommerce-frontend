@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { checkout } from "@/services/Order/order.service";
+import { mockPayment } from "@/services/Payment/payment.service";
 
 export function useCheckout(
   setCart: React.Dispatch<React.SetStateAction<any>>,
 ) {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("KBZPAY");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -23,11 +25,21 @@ export function useCheckout(
       setLoading(true);
       setMessage("");
 
-      await checkout(phone, address);
+      const order = await checkout(phone, address, paymentMethod);
 
-      setMessage(
-        "✅ Order placed successfully. Thank you for purchasing our products!",
-      );
+      // KBZPay Payment Flow
+      if (paymentMethod === "KBZPAY") {
+        const paymentResult = await mockPayment(order.id);
+
+        setMessage(`✅ ${paymentResult.message}. Thank you for purchasing!`);
+      }
+
+      // Cash on Delivery Flow
+      else if (paymentMethod === "COD") {
+        setMessage(
+          `✅ Order #${order.id} placed successfully! Pay when your order arrives.`,
+        );
+      }
 
       setPhone("");
       setAddress("");
@@ -44,6 +56,8 @@ export function useCheckout(
     setPhone,
     address,
     setAddress,
+    paymentMethod,
+    setPaymentMethod,
     loading,
     message,
     handleSubmit,

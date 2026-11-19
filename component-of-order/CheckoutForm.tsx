@@ -5,6 +5,9 @@ interface CheckoutFormProps {
   address: string;
   setAddress: React.Dispatch<React.SetStateAction<string>>;
 
+  paymentMethod: string;
+  setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
+
   loading: boolean;
   message: string;
 
@@ -18,6 +21,8 @@ function CheckoutForm({
   setPhone,
   address,
   setAddress,
+  paymentMethod,
+  setPaymentMethod,
   loading,
   message,
   cartLength,
@@ -62,6 +67,72 @@ function CheckoutForm({
                 focus:ring-gray-100
               "
           />
+        </div>
+        {/* Payment Method */}
+        <div>
+          <label className="mb-3 block text-sm font-semibold text-gray-700">
+            Payment Method
+          </label>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {/* KBZPay */}
+            <button
+              type="button"
+              onClick={() => setPaymentMethod("KBZPAY")}
+              className={`
+        flex items-center gap-3 rounded-xl border-2 p-4 text-left transition
+        ${
+          paymentMethod === "KBZPAY"
+            ? "border-blue-600 bg-blue-50"
+            : "border-gray-200 hover:border-gray-400"
+        }
+      `}
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 font-bold text-blue-700">
+                K
+              </div>
+
+              <div>
+                <p className="font-semibold text-gray-900">KBZPay</p>
+                <p className="text-xs text-gray-500">Pay with KBZPay</p>
+              </div>
+
+              <div className="ml-auto">
+                {paymentMethod === "KBZPAY" && (
+                  <span className="font-bold text-blue-600">✓</span>
+                )}
+              </div>
+            </button>
+
+            {/* Cash on Delivery */}
+            <button
+              type="button"
+              onClick={() => setPaymentMethod("COD")}
+              className={`
+        flex items-center gap-3 rounded-xl border-2 p-4 text-left transition
+        ${
+          paymentMethod === "COD"
+            ? "border-green-600 bg-green-50"
+            : "border-gray-200 hover:border-gray-400"
+        }
+      `}
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-xl">
+                💵
+              </div>
+
+              <div>
+                <p className="font-semibold text-gray-900">Cash on Delivery</p>
+                <p className="text-xs text-gray-500">Pay when delivered</p>
+              </div>
+
+              <div className="ml-auto">
+                {paymentMethod === "COD" && (
+                  <span className="font-bold text-green-600">✓</span>
+                )}
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Address */}
@@ -112,7 +183,11 @@ function CheckoutForm({
               disabled:opacity-50
             "
         >
-          {loading ? "Processing Order..." : "Place Order"}
+          {loading
+            ? "Processing Order..."
+            : paymentMethod === "KBZPAY"
+              ? "Continue to KBZPay"
+              : "Place Order"}
         </button>
 
         {message && (

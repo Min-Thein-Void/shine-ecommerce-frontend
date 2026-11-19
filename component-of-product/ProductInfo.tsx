@@ -26,54 +26,43 @@ function ProductInfo({ product }: ProductInfoProps) {
       : null;
 
   return (
-    <div className="grid gap-10 lg:grid-cols-2">
+    <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
       {/* Image Section */}
-      <div>
-        <div className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm">
+      <div className="min-w-0">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-sm sm:rounded-3xl sm:p-4">
           {selectedImage ? (
-            <img
-              src={`http://localhost:3100/uploads/${selectedImage}`}
-              alt={product.name}
-              onClick={() => setIsPreviewOpen(true)}
-              className="
-                          h-130
-                          w-full
-                          cursor-pointer
-                          rounded-2xl
-                          object-cover
-                          transition
-                          hover:scale-[1.02]
-                        "
-            />
+            <div className="overflow-hidden rounded-xl bg-slate-50 sm:rounded-2xl">
+              <img
+                src={`http://localhost:3100/uploads/${selectedImage}`}
+                alt={product.name}
+                onClick={() => setIsPreviewOpen(true)}
+                className="aspect-square w-full cursor-zoom-in object-contain transition duration-500 hover:scale-[1.02] sm:max-h-145"
+              />
+            </div>
           ) : (
-            <div className="flex h-130 items-center justify-center rounded-2xl bg-gray-100 text-gray-400">
-              No Image
+            <div className="flex aspect-square items-center justify-center rounded-xl bg-slate-50 text-sm text-slate-400">
+              No Image Available
             </div>
           )}
         </div>
 
         {/* Thumbnails */}
         {product.images && product.images.length > 1 && (
-          <div className="mt-5 flex gap-3 overflow-x-auto">
+          <div className="mt-4 flex gap-3 overflow-x-auto pb-2">
             {product.images.map((img) => (
               <button
                 key={img.id}
                 onClick={() => setSelectedImage(img.image)}
-                className="shrink-0"
+                className={`shrink-0 overflow-hidden rounded-xl border-2 bg-white p-0.5 transition ${
+                  selectedImage === img.image
+                    ? "border-blue-600 shadow-sm shadow-blue-100"
+                    : "border-slate-200 hover:border-blue-300"
+                }`}
               >
                 <img
                   src={`http://localhost:3100/uploads/${img.image}`}
                   alt={product.name}
-                  className={`
-              h-20
-              w-20
-              rounded-xl
-              object-cover
-              border
-              ${
-                selectedImage === img.image ? "border-black" : "border-gray-200"
-              }
-            `}
+                  className="h-16 w-16 rounded-lg object-cover sm:h-20 sm:w-20"
                 />
               </button>
             ))}
@@ -81,56 +70,82 @@ function ProductInfo({ product }: ProductInfoProps) {
         )}
       </div>
 
-      {/* Information */}
-      <div className="flex flex-col justify-between">
+      {/* Product Information */}
+      <div className="flex min-w-0 flex-col justify-between">
         <div>
           {/* Category */}
-          <span className="inline-flex rounded-full bg-gray-100 px-4 py-1.5 text-xs font-semibold text-gray-700">
+          <span className="inline-flex rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-blue-700">
             {product.category?.name || "Uncategorized"}
           </span>
 
           {/* Name */}
-          <h1 className="mt-5 text-4xl font-bold tracking-tight text-gray-900">
+          <h1 className="mt-4 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
             {product.name}
           </h1>
 
           {/* Rating */}
-          {avgRating && (
-            <div className="mt-4 flex items-center gap-3">
-              <span className="rounded-full bg-yellow-50 px-3 py-1 text-sm font-semibold text-yellow-600">
-                ⭐ {avgRating}
-              </span>
-
-              <span className="text-sm text-gray-500">
-                {product.reviews?.length ?? 0} reviews
-              </span>
-            </div>
-          )}
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            {avgRating ? (
+              <>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-amber-700">
+                  <span>★</span>
+                  {avgRating}
+                </span>
+                <span className="text-sm text-slate-500">
+                  {product.reviews?.length ?? 0} reviews
+                </span>
+              </>
+            ) : (
+              <span className="text-sm text-slate-400">No reviews yet</span>
+            )}
+          </div>
 
           {/* Price */}
-          <p className="mt-8 text-4xl font-bold text-gray-900">
-            {product.price.toLocaleString()} MMK
-          </p>
+          <div className="mt-7 border-y border-slate-100 py-6">
+            <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+              Price
+            </p>
+            <p className="mt-2 text-3xl font-bold tracking-tight text-blue-700 sm:text-4xl">
+              {product.price.toLocaleString()}
+              <span className="ml-2 text-base font-semibold text-slate-500">
+                MMK
+              </span>
+            </p>
+          </div>
 
           {/* Stock */}
-          <span
-            className={`mt-4 inline-flex rounded-full px-4 py-2 text-sm font-semibold ${
-              product.stock > 0
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {product.stock > 0 ? `${product.stock} available` : "Out of stock"}
-          </span>
+          <div className="mt-5">
+            <span
+              className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold ${
+                product.stock > 0
+                  ? "bg-emerald-50 text-emerald-700"
+                  : "bg-rose-50 text-rose-700"
+              }`}
+            >
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  product.stock > 0 ? "bg-emerald-500" : "bg-rose-500"
+                }`}
+              />
+              {product.stock > 0
+                ? `${product.stock} available`
+                : "Out of stock"}
+            </span>
+          </div>
 
           {/* Description */}
-          <p className="mt-8 leading-7 text-gray-600">
-            {product.description || "No description available."}
-          </p>
+          <div className="mt-7">
+            <h2 className="text-sm font-semibold text-slate-900">
+              Product Description
+            </h2>
+            <p className="mt-3 whitespace-pre-line text-sm leading-7 text-slate-600 sm:text-base">
+              {product.description || "No description available."}
+            </p>
+          </div>
         </div>
 
         {/* Action */}
-        <div className="mt-10">
+        <div className="mt-8 border-t border-slate-100 pt-6">
           <button
             disabled={product.stock === 0}
             onClick={() => {
@@ -144,58 +159,30 @@ function ProductInfo({ product }: ProductInfoProps) {
 
               router.push("/cart");
             }}
-            className="
-              w-full
-              rounded-2xl
-              bg-black
-              py-4
-              text-sm
-              font-semibold
-              text-white
-              transition
-              hover:bg-gray-800
-              active:scale-[0.98]
-              disabled:cursor-not-allowed
-              disabled:opacity-50
-            "
+            className="w-full rounded-xl bg-blue-600 px-6 py-4 text-sm font-semibold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-slate-300 disabled:shadow-none"
           >
-            Add To Cart
+            {product.stock > 0 ? "Add To Cart" : "Currently Unavailable"}
           </button>
+          <p className="mt-3 text-center text-xs text-slate-400">
+            Secure and easy checkout
+          </p>
         </div>
       </div>
+
+      {/* Image Preview Modal */}
       {isPreviewOpen && selectedImage && (
         <div
-          className="
-      fixed
-      inset-0
-      z-50
-      flex
-      items-center
-      justify-center
-      bg-black/80
-      p-5
-    "
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 p-4 backdrop-blur-sm"
           onClick={() => setIsPreviewOpen(false)}
         >
           <div
-            className="
-        relative
-        max-h-[90vh]
-        max-w-5xl
-      "
+            className="relative flex max-h-[90vh] max-w-5xl items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setIsPreviewOpen(false)}
-              className="
-          absolute
-          right-0
-          top-0
-          z-10
-          -translate-y-12
-          text-3xl
-          text-white
-        "
+              aria-label="Close image preview"
+              className="absolute -right-2 -top-12 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-2xl text-white transition hover:bg-white/25"
             >
               ×
             </button>
@@ -203,11 +190,7 @@ function ProductInfo({ product }: ProductInfoProps) {
             <img
               src={`http://localhost:3100/uploads/${selectedImage}`}
               alt={product.name}
-              className="
-          max-h-[85vh]
-          rounded-2xl
-          object-contain
-        "
+              className="max-h-[85vh] max-w-full rounded-xl object-contain"
             />
           </div>
         </div>

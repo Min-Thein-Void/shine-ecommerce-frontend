@@ -23,18 +23,23 @@ const ProductDetailClient = ({ product }: ProductDetailClientProps) => {
   }, [product.id]);
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-10">
-      {/* Product Detail */}
-      <ProductInfo product={product} />
+    <div className="min-h-screen bg-slate-50/70">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-10 lg:py-12">
+        {/* Product Detail */}
+        <ProductInfo product={product} />
 
-      {/* Reviews */}
-      <Reviews reviews={reviews} />
+        {/* Reviews */}
+        <div className="mt-12 border-t border-slate-200 pt-10 sm:mt-16 sm:pt-12">
+          <Reviews reviews={reviews} />
+        </div>
 
-      {/* Write Review */}
-      <WriteReview
-        productId={product.id}
-        onSuccess={() => fetchProductReviewHandler(product.id)}
-      />
+        {/* Write Review */}
+        <WriteReview
+          productId={product.id}
+          reviews={reviews}
+          onSuccess={() => fetchProductReviewHandler(product.id)}
+        />
+      </div>
     </div>
   );
 };

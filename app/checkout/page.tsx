@@ -18,6 +18,8 @@ function Checkout() {
     setPhone,
     address,
     setAddress,
+    paymentMethod,
+    setPaymentMethod
   } = useCheckout(setCart);
 
   return (
@@ -32,6 +34,8 @@ function Checkout() {
           setPhone={setPhone}
           address={address}
           setAddress={setAddress}
+          paymentMethod={paymentMethod}
+          setPaymentMethod={setPaymentMethod}
           loading={loading}
           message={message}
           cartLength={cart.length}
