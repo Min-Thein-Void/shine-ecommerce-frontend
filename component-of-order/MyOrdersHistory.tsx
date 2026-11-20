@@ -3,7 +3,7 @@
 import OrderHeader from "@/component-of-order/OrderHeader";
 import OrderHistroyList from "@/component-of-order/OrderHistroyList";
 import OrderMaShiYinPyaTaePage from "@/component-of-order/OrderMaShiYinPyaTaePage";
-import { getMyOrders } from "@/services/Order/order.service";
+import { deleteMyOrder, getMyOrders } from "@/services/Order/order.service";
 import { Order } from "@/types/Order";
 import { useEffect, useState } from "react";
 
@@ -25,6 +25,19 @@ export default function MyOrdersHistory() {
   useEffect(() => {
     getOrdersHandler();
   }, []);
+
+  const handleDeleteOrder = async (orderId: number) => {
+  try {
+    await deleteMyOrder(orderId);
+
+    // Remove deleted order from UI
+    setMyOrders((prevOrders) =>
+      prevOrders.filter((order) => order.id !== orderId),
+    );
+  } catch (error: any) {
+    alert(error.message || "Failed to delete order");
+  }
+};
 
   if (loading) {
     return (
@@ -50,7 +63,7 @@ export default function MyOrdersHistory() {
       <OrderMaShiYinPyaTaePage myOrders={myOrders} />
 
       {/* Orders */}
-      <OrderHistroyList myOrders={myOrders} />
+      <OrderHistroyList myOrders={myOrders} onDeleteOrder={handleDeleteOrder}/>
     </div>
   );
 }

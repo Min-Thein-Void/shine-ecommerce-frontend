@@ -2,9 +2,10 @@ import { Order } from "@/types/Order";
 
 interface OrderListProps {
   myOrders: Order[];
+  onDeleteOrder: (orderId: number) => void;
 }
 
-function OrderHistroyList({ myOrders }: OrderListProps) {
+function OrderHistroyList({ myOrders, onDeleteOrder }: OrderListProps) {
   const getStatusColor = (status: Order["status"]) => {
     switch (status) {
       case "PENDING":
@@ -58,13 +59,30 @@ function OrderHistroyList({ myOrders }: OrderListProps) {
               </div>
             </div>
 
-            <span
-              className={`w-fit rounded-full px-4 py-2 text-xs font-bold ${getStatusColor(
-                order.status,
-              )}`}
-            >
-              {order.status}
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <span
+                className={`w-fit rounded-full px-4 py-2 text-xs font-bold ${getStatusColor(
+                  order.status,
+                )}`}
+              >
+                {order.status}
+              </span>
+
+              <button
+                onClick={() => {
+                  const confirmed = window.confirm(
+                    `Are you sure you want to delete Order #${order.id}?`,
+                  );
+
+                  if (confirmed) {
+                    onDeleteOrder(order.id);
+                  }
+                }}
+                className="rounded-xl border border-red-200 bg-white px-4 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50"
+              >
+                Delete Order
+              </button>
+            </div>
           </div>
 
           {/* Order Information */}

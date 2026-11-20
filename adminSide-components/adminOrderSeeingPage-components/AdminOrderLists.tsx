@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -13,10 +12,7 @@ import {
 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
-import {
-  filterOrder,
-  updateOrderStatus,
-} from "@/services/Order/order.service";
+import { filterOrder, updateOrderStatus } from "@/services/Order/order.service";
 import { Order } from "@/types/admin/adminOrder";
 import { orderStatus } from "@/types/orderStatus";
 import AdminOrderFilterByTags from "./AdminOrderFilterByTags";
@@ -29,10 +25,7 @@ interface AdminOrderListsProps {
 
 type OrderFilter = Order["status"] | "ALL";
 
-function AdminOrderLists({
-  orders,
-  setOrders,
-}: AdminOrderListsProps) {
+function AdminOrderLists({ orders, setOrders }: AdminOrderListsProps) {
   const [updatingOrders, setUpdatingOrders] = useState<number[]>([]);
   const [errorOrderId, setErrorOrderId] = useState<number | null>(null);
   const [activeFilter, setActiveFilter] = useState<OrderFilter>("ALL");
@@ -64,9 +57,7 @@ function AdminOrderLists({
       console.error("Failed to update order status:", error);
       setErrorOrderId(orderId);
     } finally {
-      setUpdatingOrders((prev) =>
-        prev.filter((id) => id !== orderId),
-      );
+      setUpdatingOrders((prev) => prev.filter((id) => id !== orderId));
     }
   };
 
@@ -128,10 +119,7 @@ function AdminOrderLists({
             value={order.status}
             disabled={isUpdating}
             onChange={(e) =>
-              updateOrderStatusHandler(
-                order.id,
-                e.target.value as orderStatus,
-              )
+              updateOrderStatusHandler(order.id, e.target.value as orderStatus)
             }
             className="w-full appearance-none rounded-lg border border-gray-200 bg-white px-3 py-2.5 pr-9 text-sm font-medium text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 disabled:cursor-not-allowed disabled:opacity-60"
           >
@@ -168,9 +156,7 @@ function AdminOrderLists({
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h2 className="text-lg font-bold text-gray-900">
-            All Orders
-          </h2>
+          <h2 className="text-lg font-bold text-gray-900">All Orders</h2>
           <p className="mt-1 text-sm text-gray-500">
             Manage customer orders and delivery status.
           </p>
@@ -232,7 +218,7 @@ function AdminOrderLists({
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <p className="break-words text-sm font-semibold text-gray-900">
+                      <p className="wrap-break-word text-sm font-semibold text-gray-900">
                         {order.user?.name ?? "Unknown"}
                       </p>
                       <p className="mt-1 break-all text-xs text-gray-500">
@@ -264,10 +250,7 @@ function AdminOrderLists({
                     <div className="min-w-0 rounded-lg bg-gray-50 p-3">
                       <p className="text-xs text-gray-500">Items</p>
                       <div className="mt-2 flex items-center gap-2">
-                        <Package
-                          size={16}
-                          className="shrink-0 text-gray-400"
-                        />
+                        <Package size={16} className="shrink-0 text-gray-400" />
                         <span className="text-sm font-semibold text-gray-800">
                           {order.items?.length ?? 0} items
                         </span>
@@ -277,9 +260,7 @@ function AdminOrderLists({
 
                   {/* Total */}
                   <div className="flex flex-wrap items-center justify-between gap-2 border-t border-gray-100 pt-4">
-                    <span className="text-sm text-gray-500">
-                      Order Total
-                    </span>
+                    <span className="text-sm text-gray-500">Order Total</span>
                     <p className="text-right text-base font-bold text-gray-900">
                       {order.total.toLocaleString()}{" "}
                       <span className="text-xs font-medium text-gray-500">
@@ -306,7 +287,7 @@ function AdminOrderLists({
           {/* Desktop: Table */}
           <div className="hidden min-w-0 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm lg:block">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1000px] text-left">
+              <table className="w-full min-w-250 text-left">
                 <thead className="border-b border-gray-200 bg-gray-50">
                   <tr>
                     {[
@@ -380,9 +361,7 @@ function AdminOrderLists({
                         <span className="text-sm font-bold text-gray-900">
                           {order.total.toLocaleString()}
                         </span>
-                        <span className="ml-1 text-xs text-gray-500">
-                          MMK
-                        </span>
+                        <span className="ml-1 text-xs text-gray-500">MMK</span>
                       </td>
 
                       <td className="whitespace-nowrap px-4 py-4">
@@ -393,7 +372,7 @@ function AdminOrderLists({
                         </span>
                       </td>
 
-                      <td className="min-w-[190px] px-4 py-4">
+                      <td className="min-w-47.5 px-4 py-4">
                         {renderStatusSelect(order)}
                       </td>
                     </tr>
@@ -425,9 +404,7 @@ function AdminOrderLists({
               {filteredOrders.length}
             </span>{" "}
             of{" "}
-            <span className="font-semibold text-gray-700">
-              {orders.length}
-            </span>{" "}
+            <span className="font-semibold text-gray-700">{orders.length}</span>{" "}
             orders
           </p>
         </>
